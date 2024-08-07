@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Tag;
+use Illuminate\Support\Collection;
 
 class TagRepository implements TagRepositoryInterface
 {
@@ -21,9 +22,9 @@ class TagRepository implements TagRepositoryInterface
     {
         return $this->model->all();
     }
-    public function findMultiple(array $ids): array
+    public function findMany(array $ids): Collection
     {
-        return $this->model->whereIn('id', $ids)->get()->all();
+        return $this->model->whereIn('id', $ids)->get();
     }
 
     public function create(array $data): Tag
