@@ -2,11 +2,15 @@
 
 namespace App\Models;
 
+use App\Helpers\SlugHelper;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class Tag extends Model
 {
+    use HasFactory;
+
     protected $fillable = ['name', 'slug'];
 
     public static function boot()
@@ -14,23 +18,14 @@ class Tag extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            $model->slug = $model->generateSlug($model->name);
+            $model->slug = SlugHelper::generateSlug(self::class, $model->name);
         });
 
         static::updating(function ($model) {
             if ($model->isDirty('name')) {
-                $model->slug = $model->generateSlug($model->name);
+                $model->slug = SlugHelper::generateSlug(self::class, $model->name);
             }
         });
-    }
-
-    public function generateSlug($name)
-    {
-        $slug = Str::slug($name);
-
-        $count = Tag::where('slug', 'LIKE', "{$slug}%")->count();
-
-        return $count ? "{$slug}-{$count}" : $slug;
     }
 
     public function products()
