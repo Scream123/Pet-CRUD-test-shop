@@ -9,6 +9,7 @@ use App\Repositories\TagRepositoryInterface;
 use Exception;
 use Illuminate\Support\Str;
 
+
 class CatalogService
 {
     protected $productRepository;
@@ -30,34 +31,51 @@ class CatalogService
     {
         $this->validateProductData($data);
 
-        $data['slug'] = $this->generateSlug($data['name']);
-
         $product = $this->productRepository->create($data);
-        $category = $this->categoryRepository->find($data['category_id']);
-        $tags = $this->tagRepository->find($data['tags']);
 
-        $product->categories()->attach($category);
-        $product->tags()->sync($tags);
+        $category = $this->categoryRepository->find($data['category_id']);
+        $tags = $this->tagRepository->findMany($data['tags']);
+
+        if ($category && $tags->isNotEmpty()) {
+            foreach ($tags as $tag) {
+                $product->categories()->attach($category->id, ['tag_id' => $tag->id]);
+            }
+        }
 
         return $product;
     }
 
+
     public function updateProduct($id, array $data): Product
     {
         $this->validateProductData($data);
+        $product = $this->productRepository->find($id);
 
-        if (isset($data['name'])) {
-            $data['slug'] = $this->generateSlug($data['name']);
+        if (!$product) {
+            throw new \Exception('Product not found.');
         }
 
-        $product = $this->productRepository->update($id, $data);
+        $product->update([
+            'name' => $data['name'],
+            'description' => $data['description'],
+        ]);
+
         if (isset($data['category_id'])) {
             $category = $this->categoryRepository->find($data['category_id']);
-            $product->categories()->sync($category);
+            if ($category) {
+                $product->categories()->detach();
+                $product->categories()->attach($category->id);
+            }
         }
-        if (isset($data['tags'])) {
-            $tags = $this->tagRepository->find($data['tags']);
-            $product->tags()->sync($tags);
+
+        if (isset($data['tags']) && is_array($data['tags'])) {
+            $tags = $this->tagRepository->findMany($data['tags']);
+            if ($tags->isNotEmpty()) {
+                $product->tags()->detach();
+                foreach ($tags as $tag) {
+                    $product->categories()->attach($data['category_id'], ['tag_id' => $tag->id]);
+                }
+            }
         }
 
         return $product;
@@ -71,13 +89,10 @@ class CatalogService
     protected function validateProductData(array $data)
     {
         if (Product::where('name', $data['name'])->exists()) {
-            throw new Exception('Продукт с таким названием уже существует.');
+            throw new \Exception('Product with the name already exists.');
         }
-        if (!Category::find($data['category_id'])) {
-            throw new Exception('Категория не существует.');
-        }
-        if (!Tag::find($data['tags'])) {
-            throw new Exception('Один или несколько тегов не существует.');
+        if (!isset($data['category_id']) || !isset($data['tags'])) {
+            throw new \InvalidArgumentException('Category ID and Tags are required.');
         }
     }
 
