@@ -1,9 +1,5 @@
 @extends('layouts.app')
-
 @section('content')
-    <style>
-        /* Ваши стили здесь */
-    </style>
     <h1>Products</h1>
     <a href="{{ route('products.create') }}" class="btn">Create New Product</a>
     <a href="{{ route('categories.create') }}" class="btn">Add New Category</a>
@@ -30,14 +26,19 @@
                 <td>{{ $index + 1 }}</td>
                 <td>{{ $product->name }}</td>
                 <td>
-                    @foreach ($product->categories as $category)
-                        {{ $category->name }}
-                    @endforeach
+                    {{ $product->categories->first()->name ?? 'No Category' }}
                 </td>
                 <td>
-                    @foreach ($product->tags as $tag)
-                        {{ $tag->name }}@if (!$loop->last), @endif
-                    @endforeach
+                    @if ($product->tags->isEmpty())
+                        No Tag
+                    @else
+                        @foreach ($product->tags as $tag)
+                            {{ $tag->name  ?? 'No Tag' }}@if (!$loop->last)
+                                ,
+                            @endif
+                        @endforeach
+                    @endif
+
                 </td>
                 <td>{{ $product->description }}</td>
                 <td>

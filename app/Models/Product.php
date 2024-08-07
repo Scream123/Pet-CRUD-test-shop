@@ -1,10 +1,10 @@
 <?php
+
 namespace App\Models;
 
 use App\Helpers\SlugHelper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 
 class Product extends Model
 {
@@ -22,7 +22,7 @@ class Product extends Model
 
         static::updating(function ($model) {
             if ($model->isDirty('name')) {
-                $model->slug = $model->generateSlug($model->name);
+                $model->slug = SlugHelper::generateSlug(self::class, $model->name);
             }
         });
     }
