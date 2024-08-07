@@ -5,19 +5,24 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreRequest;
 use App\Http\Requests\UpdateRequest;
 use App\Repositories\ProductRepositoryInterface;
+use App\Repositories\TagRepositoryInterface;
 use App\Services\CatalogService;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
     protected $catalogService;
     protected $productRepository;
+    protected $tagRepository;
 
-    public function __construct(CatalogService $catalogService, ProductRepositoryInterface $productRepository)
-    {
+    public function __construct(
+        CatalogService $catalogService,
+        ProductRepositoryInterface $productRepository,
+        TagRepositoryInterface $tagRepository,
+    ){
         $this->catalogService = $catalogService;
         $this->productRepository = $productRepository;
+        $this->tagRepository = $tagRepository;
     }
 
     public function index()
@@ -33,21 +38,24 @@ class ProductController extends Controller
 
     public function create()
     {
-        return view('products.create');
+        $categories = $this->productRepository->all();
+        $tags = $this->tagRepository->all();
+        return view('products.create', compact('categories', 'tags'));
     }
+
 
     public function store(StoreRequest $request)
     {
-        $data = $request->validated();
+                $data = $request->validated();
         try {
             $product = $this->catalogService->createProduct($data);
             return response()->json([
-                'message' => 'Продукт успешно добавлен!',
+                'message' => 'Product added successfully!',
                 'product' => $product
             ], 201);
         } catch (\Exception $e) {
-            Log::error('Ошибка при создании продукта: ' . $e->getMessage());
-            return response()->json(['error' => 'Ошибка при создании продукта'], 500);
+            Log::error('Error creating product: ' . $e->getMessage());
+            return response()->json(['error' => 'Error creating product'], 500);
         }
     }
 
@@ -60,7 +68,9 @@ class ProductController extends Controller
     public function edit($id)
     {
         $product = $this->productRepository->find($id);
-        return view('products.edit', compact('product'));
+        $categories = $this->productRepository->all();
+        $tags = $this->tagRepository->all();
+        return view('products.edit', compact('product', 'categories', 'tags'));
     }
 
     public function update(UpdateRequest $request, $id)
