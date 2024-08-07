@@ -2,11 +2,15 @@
 
 namespace App\Models;
 
+use App\Helpers\SlugHelper;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class Category extends Model
 {
+    use HasFactory;
+
     protected $fillable = ['name', 'slug'];
 
     public static function boot()
@@ -14,7 +18,7 @@ class Category extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            $model->slug = $model->generateSlug($model->name);
+            $model->slug = SlugHelper::generateSlug(self::class, $model->name);
         });
 
         static::updating(function ($model) {
