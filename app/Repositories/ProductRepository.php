@@ -2,40 +2,45 @@
 
 namespace App\Repositories;
 
-use App\Models\Category;
 use App\Models\Product;
-use App\Models\ProductCategoryTag;
-use App\Models\Tag;
 
 class ProductRepository implements ProductRepositoryInterface
 {
     protected $model;
+    protected $categoryRepository;
+    protected $tagRepository;
 
-    public function __construct(Product $model)
+    public function __construct(
+        Product                     $model,
+        CategoryRepositoryInterface $categoryRepository,
+        TagRepositoryInterface      $tagRepository
+    )
     {
         $this->model = $model;
+        $this->categoryRepository = $categoryRepository;
+        $this->tagRepository = $tagRepository;
     }
 
     public function create(array $data): Product
     {
+        if (!isset($data['category_id']) || !isset($data['tags'])) {
+            throw new \InvalidArgumentException('Category ID and Tags are required.');
+        }
+
         $product = $this->model->create([
             'name' => $data['name'],
             'description' => $data['description'],
         ]);
 
-        if (isset($data['category_id'])) {
-            $category = Category::findOrFail($data['category_id']);
-            $product->categories()->attach($category);
-        }
-
-        // Присвоение тегов
         if (isset($data['tags']) && is_array($data['tags'])) {
-            $tags = Tag::find($data['tags']);
-            $product->tags()->sync($tags);
+            foreach ($data['tags'] as $tagId) {
+                $product->categories()->attach($data['category_id'], ['tag_id' => $tagId]);
+            }
         }
 
         return $product;
     }
+
 
     public function findByName($name)
     {
@@ -65,31 +70,9 @@ class ProductRepository implements ProductRepositoryInterface
         $product = $this->find($id);
         $product->delete();
     }
+
     public function countSlugs($slug)
     {
         return $this->model->where('slug', 'LIKE', "{$slug}%")->count();
     }
-    // Если у вас есть методы, которые нужно реализовать, добавьте их здесь
-    // Например:
-    // public function attachCategoryAndTags($productId, $categoryId, array $tagIds)
-    // {
-    //     $data = [];
-    //     if ($categoryId) {
-    //         $data[] = [
-    //             'product_id' => $productId,
-    //             'category_id' => $categoryId,
-    //             'tag_id' => null,
-    //         ];
-    //     }
-
-    //     foreach ($tagIds as $tagId) {
-    //         $data[] = [
-    //             'product_id' => $productId,
-    //             'category_id' => null,
-    //             'tag_id' => $tagId,
-    //         ];
-    //     }
-
-    //     ProductCategoryTag::insert($data);
-    // }
 }
