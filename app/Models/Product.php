@@ -1,11 +1,15 @@
 <?php
 namespace App\Models;
 
+use App\Helpers\SlugHelper;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class Product extends Model
 {
+    use HasFactory;
+
     protected $fillable = ['name', 'description', 'slug'];
 
     public static function boot()
@@ -13,7 +17,7 @@ class Product extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            $model->slug = $model->generateSlug($model->name);
+            $model->slug = SlugHelper::generateSlug(self::class, $model->name);
         });
 
         static::updating(function ($model) {
@@ -25,19 +29,11 @@ class Product extends Model
 
     public function categories()
     {
-        return $this->belongsToMany(Category::class, 'product_category_tags', 'product_id', 'category_id');
+        return $this->belongsToMany(Category::class, 'product_category_tags', 'product_id', 'category_id')->withPivot('tag_id');
     }
 
     public function tags()
     {
-        return $this->belongsToMany(Tag::class, 'product_category_tags', 'product_id', 'tag_id');
-    }
-    public function generateSlug($name)
-    {
-        $slug = Str::slug($name);
-
-        $count = Product::where('slug', 'LIKE', "{$slug}%")->count();
-
-        return $count ? "{$slug}-{$count}" : $slug;
+        return $this->belongsToMany(Tag::class, 'product_category_tags', 'product_id', 'tag_id')->withPivot('category_id');
     }
 }
