@@ -26,9 +26,9 @@ class StoreRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'category_id' => 'required|exists:categories,id',
-            'tags' => 'nullable|array',
-            'tags.*' => 'exists:tags,id',
+            'category_id' => 'required|integer',
+            'tags' => 'required|array',
+            'tags.*' => 'integer',
         ];
     }
 }
