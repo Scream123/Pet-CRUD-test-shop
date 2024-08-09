@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
+    <div class="container mt-4">
         <h1>Edit Product</h1>
 
         <div class="card">
@@ -44,20 +44,16 @@
                         </select>
                     </div>
 
-                    <!-- Tags Checkboxes -->
+                    <!-- Tags -->
                     <div class="mb-3">
-                        <label class="form-label">Tags</label>
-                        <div class="form-check">
-                            @foreach($tags as $tag)
-                                <input class="form-check-input" type="checkbox" id="tag{{ $tag->id }}" name="tags[]"
-                                       value="{{ $tag->id }}"
-                                    {{ $product->tags->pluck('id')->contains($tag->id) ? 'checked' : '' }}>
-                                <label class="form-check-label" for="tag{{ $tag->id }}">
-                                    {{ $tag->name }}
-                                </label>
+                        <label for="tags" class="form-label">Tags</label>
+                        <select id="tags" name="tags[]" class="form-select" multiple required>
+                            @foreach ($tags as $tag)
+                                <option value="{{ $tag->id }}">{{ $tag->name }}</option>
                             @endforeach
-                        </div>
+                        </select>
                     </div>
+
 
                     <!-- Submit and Back Buttons -->
                     <div class="mb-3">

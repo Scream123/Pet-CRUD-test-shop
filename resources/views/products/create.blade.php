@@ -2,47 +2,51 @@
 
 @section('content')
 
-    <h1>Create Product</h1>
+    <div class="container">
+        <h1>Create Product</h1>
 
-    @if ($message = Session::get('success'))
-        <div class="alert alert-success">
-            {{ $message }}
-        </div>
-    @endif
+        @if ($message = Session::get('success'))
+            <div class="alert alert-success">
+                {{ $message }}
+            </div>
+        @endif
 
-    <form action="{{ route('products.store') }}" method="POST">
-        @csrf
-        <div class="form-group">
-            <label for="title">Product Title</label>
-            <input type="text" id="title" name="name" placeholder="Product Title" required>
-        </div>
+        <form action="{{ route('products.store') }}" method="POST">
+            @csrf
 
-        <div class="form-group">
-            <label for="category">Category</label>
-            <select id="category" name="category_id" required>
-                @foreach ($categories as $category)
-                    <option value="{{ $category->id }}">{{ $category->name }}</option>
-                @endforeach
-            </select>
-        </div>
+            <div class="mb-3">
+                <label for="title" class="form-label">Product Title</label>
+                <input type="text" id="title" name="name" class="form-control" placeholder="Product Title" required>
+            </div>
 
-        <div class="form-group">
-            <label for="tags">Tags</label>
-            <select id="tags" name="tags[]" multiple required>
-                @foreach ($tags as $tag)
-                    <option value="{{ $tag->id }}">{{ $tag->name }}</option>
-                @endforeach
-            </select>
-        </div>
+            <div class="mb-3">
+                <label for="category" class="form-label">Category</label>
+                <select id="category" name="category_id" class="form-select" required>
+                    @foreach ($categories as $category)
+                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                    @endforeach
+                </select>
+            </div>
 
-        <div class="form-group">
-            <label for="description">Product Description</label>
-            <textarea id="description" name="description" placeholder="Product Description" required></textarea>
-        </div>
+            <div class="mb-3">
+                <label for="tags" class="form-label">Tags</label>
+                <select id="tags" name="tags[]" class="form-select" multiple required>
+                    @foreach ($tags as $tag)
+                        <option value="{{ $tag->id }}">{{ $tag->name }}</option>
+                    @endforeach
+                </select>
+            </div>
 
-        <div class="form-group">
-            <button type="submit">Create Product</button>
-            <a href="{{ route('products.index') }}" class="btn btn-secondary">Back to List</a>
-        </div>
-    </form>
+            <div class="mb-3">
+                <label for="description" class="form-label">Product Description</label>
+                <textarea id="description" name="description" class="form-control" placeholder="Product Description" required></textarea>
+            </div>
+
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary">Create Product</button>
+                <a href="{{ route('products.index') }}" class="btn btn-secondary">Back to List</a>
+            </div>
+        </form>
+    </div>
+
 @endsection
