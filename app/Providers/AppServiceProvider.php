@@ -2,12 +2,12 @@
 
 namespace App\Providers;
 
+use App\Interfaces\CategoryRepositoryInterface;
+use App\Interfaces\ProductRepositoryInterface;
+use App\Interfaces\TagRepositoryInterface;
 use App\Repositories\CategoryRepository;
-use App\Repositories\CategoryRepositoryInterface;
 use App\Repositories\ProductRepository;
-use App\Repositories\ProductRepositoryInterface;
 use App\Repositories\TagRepository;
-use App\Repositories\TagRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
