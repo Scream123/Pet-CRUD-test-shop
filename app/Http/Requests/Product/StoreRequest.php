@@ -1,11 +1,14 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Product;
 
+use App\Traits\ValidationErrorHandler;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreProductRequest extends FormRequest
+class StoreRequest extends FormRequest
 {
+    use ValidationErrorHandler;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -25,7 +28,7 @@ class StoreProductRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255|unique:products,name',
-            'description' => 'required|string',
+            'description' => 'nullable|string',
             'category_id' => 'required|exists:categories,id',
             'tags' => 'required|array',
             'tags.*' => 'integer|exists:tags,id',
