@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Interfaces\CategoryRepositoryInterface;
 use App\Models\Category;
 
 class CategoryRepository implements CategoryRepositoryInterface
@@ -23,9 +24,6 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
     public function create(array $data): Category
     {
-        if (isset($data['name'])) {
-            $data['slug'] = $this->model->generateSlug($data['name']);
-        }
         return $this->model->create($data);
     }
 
@@ -41,8 +39,9 @@ class CategoryRepository implements CategoryRepositoryInterface
         $category = $this->find($id);
         $category->delete();
     }
-    public function countSlugs($slug)
+    public function paginate($perPage = 15)
     {
-        return $this->model->where('slug', 'LIKE', "{$slug}%")->count();
+        return Category::with('parent')
+        ->paginate($perPage);
     }
 }

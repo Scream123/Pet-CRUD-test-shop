@@ -2,6 +2,9 @@
 
 namespace App\Repositories;
 
+use App\Interfaces\CategoryRepositoryInterface;
+use App\Interfaces\ProductRepositoryInterface;
+use App\Interfaces\TagRepositoryInterface;
 use App\Models\Product;
 
 class ProductRepository implements ProductRepositoryInterface
@@ -23,24 +26,21 @@ class ProductRepository implements ProductRepositoryInterface
 
     public function create(array $data): Product
     {
-        if (!isset($data['category_id']) || !isset($data['tags'])) {
-            throw new \InvalidArgumentException('Category ID and Tags are required.');
-        }
-
         $product = $this->model->create([
             'name' => $data['name'],
             'description' => $data['description'],
         ]);
 
-        if (isset($data['tags']) && is_array($data['tags'])) {
-            foreach ($data['tags'] as $tagId) {
-                $product->categories()->attach($data['category_id'], ['tag_id' => $tagId]);
-            }
+        if (isset($data['category_ids']) && is_array($data['category_ids'])) {
+            $product->categories()->sync($data['category_ids']);
+        }
+
+        if (isset($data['tag_ids']) && is_array($data['tag_ids'])) {
+            $product->tags()->sync($data['tag_ids']);
         }
 
         return $product;
     }
-
 
     public function findByName($name)
     {
@@ -59,6 +59,7 @@ class ProductRepository implements ProductRepositoryInterface
 
     public function update($id, array $data)
     {
+
         $product = $this->find($id);
         $product->update($data);
 
@@ -71,8 +72,9 @@ class ProductRepository implements ProductRepositoryInterface
         $product->delete();
     }
 
-    public function countSlugs($slug)
+    public function paginate($perPage = null)
     {
-        return $this->model->where('slug', 'LIKE', "{$slug}%")->count();
+        $perPage = $perPage ?: config('pagination.per_page');
+        return $this->model->with('categories', 'tags')->paginate($perPage);
     }
 }

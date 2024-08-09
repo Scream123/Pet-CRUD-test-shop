@@ -2,8 +2,8 @@
 
 namespace App\Repositories;
 
+use App\Interfaces\TagRepositoryInterface;
 use App\Models\Tag;
-use Illuminate\Support\Collection;
 
 class TagRepository implements TagRepositoryInterface
 {
@@ -21,10 +21,6 @@ class TagRepository implements TagRepositoryInterface
     public function all()
     {
         return $this->model->all();
-    }
-    public function findMany(array $ids): Collection
-    {
-        return $this->model->whereIn('id', $ids)->get();
     }
 
     public function create(array $data): Tag
@@ -44,8 +40,8 @@ class TagRepository implements TagRepositoryInterface
         $tag = $this->find($id);
         $tag->delete();
     }
-    public function countSlugs($slug)
+    public function paginate($perPage = 15)
     {
-        return $this->model->where('slug', 'LIKE', "{$slug}%")->count();
+        return $this->model->paginate($perPage);
     }
 }
