@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Interfaces;
 
 use App\Models\Product;
 
@@ -17,6 +17,5 @@ interface ProductRepositoryInterface
     public function update($id, array $data);
 
     public function delete($id);
-
-    public function countSlugs($slug);
+    public function paginate($perPage);
 }

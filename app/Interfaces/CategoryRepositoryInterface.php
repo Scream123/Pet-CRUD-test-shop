@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Interfaces;
 
 use App\Models\Category;
 
@@ -12,5 +12,5 @@ interface CategoryRepositoryInterface
     public function create(array $data): Category;
     public function update($id, array $data): Category;
     public function delete($id): void;
-    public function countSlugs($slug);
+    public function paginate($perPage);
 }
