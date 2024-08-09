@@ -1,33 +1,33 @@
-/* Устраняем любые внутренние отступы и устанавливаем базовые настройки */
+/* Remove any internal padding and set up basic settings */
 body {
     margin: 0;
     font-family: Arial, sans-serif;
 }
 
-/* Основные стили таблиц */
+/* Basic table styles */
 .table {
     width: 100%;
     border-collapse: collapse;
-    table-layout: auto; /* Позволяет таблице изменять размер в зависимости от содержимого */
+    table-layout: auto; /* Allows the table to resize based on its contents */
 }
 
-/* Стили заголовков и ячеек таблицы */
+/* Header and table cell styles */
 .table th, .table td {
-    border: 1px solid #dee2e6; /* Цвет границы таблицы */
-    padding: 0.75rem; /* Отступы для ячеек таблицы */
+    border: 1px solid #dee2e6;
+    padding: 0.75rem; /* Indents for table cells */
 }
 
 .table th {
-    background-color: #f8f9fa; /* Цвет фона заголовков таблицы */
+    background-color: #f8f9fa;
     text-align: left;
 }
 
-/* Настройка границы таблицы */
+/* Setting table border */
 .table-bordered {
     border: 1px solid #ddd;
 }
 
-/* Стили ссылок */
+/* Link styles */
 a {
     color: #007bff;
     text-decoration: none;
@@ -37,13 +37,13 @@ a:hover {
     text-decoration: underline;
 }
 
-/* Стили кнопок */
+/* Button styles */
 .btn-custom {
-    background-color: #007bff; /* Цвет фона кнопки */
+    background-color: #007bff;
     color: white;
     border: none;
-    padding: 0.375rem 0.75rem; /* Паддинг кнопки */
-    font-size: 0.875rem; /* Размер шрифта кнопки */
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
     cursor: pointer;
 }
 
@@ -51,12 +51,12 @@ a:hover {
     background-color: #0056b3;
 }
 
-/* Стили кнопок во формах */
+/* Styles of buttons in forms */
 .form-group .btn {
-    border-radius: 0.25rem; /* Радиус границы кнопки */
+    border-radius: 0.25rem;
 }
 
-/* Вторичные кнопки */
+/* Secondary buttons */
 .btn-secondary-custom {
     background-color: #6c757d;
     color: white;
@@ -66,27 +66,27 @@ a:hover {
     background-color: #5a6268;
 }
 
-/* Стили сообщений */
+/* Message styles */
 .alert-custom {
     margin-bottom: 1rem;
     border-radius: 0.25rem;
 }
 
-/* Стиль успешных сообщений */
+/* Success Message Style */
 .alert-success-custom {
     color: #155724;
     background-color: #d4edda;
     border-color: #c3e6cb;
 }
 
-/* Стиль сообщений об ошибке */
+/* Error message style */
 .alert-danger-custom {
     color: #721c24;
     background-color: #f8d7da;
     border-color: #f5c6cb;
 }
 
-/* Дополнительные стили для действий */
+/* Additional styles for actions */
 .actions {
     display: flex;
     align-items: center;
@@ -96,7 +96,6 @@ a:hover {
     margin-left: 5px;
 }
 
-/* Стили для блоков */
 .block {
     margin-bottom: 20px;
     padding: 10px;
@@ -106,7 +105,6 @@ a:hover {
     border-radius: 4px;
 }
 
-/* Стили для формы */
 .form-group {
     margin-bottom: 1rem;
 }
@@ -120,11 +118,10 @@ a:hover {
 .form-group select, .form-group input, .form-group textarea {
     width: 100%;
     padding: 0.5rem;
-    border: 1px solid #ced4da; /* Цвет границы поля формы */
-    border-radius: 0.25rem; /* Радиус границы поля формы */
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
 }
 
-/* Убедитесь, что контейнер fluid занимает всю доступную ширину */
 .container-fluid {
     padding-right: 15px;
     padding-left: 15px;
@@ -133,8 +130,7 @@ a:hover {
     margin-left: auto;
 }
 
-/* Убедитесь, что таблица внутри .table-responsive растягивается на всю ширину */
 .table-responsive {
-    overflow-x: auto; /* Это позволит таблице прокручиваться по горизонтали, если она не помещается */
+    overflow-x: auto;
     width: 100%;
 }
