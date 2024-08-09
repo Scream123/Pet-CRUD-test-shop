@@ -47,8 +47,9 @@ class ProductController extends Controller
 
     public function create()
     {
-        $categories = $this->productRepository->all();
+        $categories = $this->categoriesRepository->all();
         $tags = $this->tagRepository->all();
+
         return view('products.create', compact('categories', 'tags'));
     }
 
