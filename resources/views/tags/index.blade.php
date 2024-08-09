@@ -1,37 +1,45 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1>Tags</h1>
-    <a href="{{ route('tags.create') }}">Add New Tag</a>
+    <div class="container">
+        <h1 class="mb-4">Tags</h1>
 
-    @if ($message = Session::get('success'))
-        <div>{{ $message }}</div>
-    @endif
+        <div class="mb-3">
+            <a href="{{ route('tags.create') }}" class="btn btn-primary">Add New Tag</a>
+            <a href="{{ route('products.index') }}" class="btn btn-secondary">Back to List</a>
+        </div>
 
-    <table>
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach ($tags as $tag)
+        @if ($message = Session::get('success'))
+            <div class="alert alert-success mb-3">
+                {{ $message }}
+            </div>
+        @endif
+
+        <table class="table table-striped">
+            <thead>
             <tr>
-                <td>{{ $tag->id }}</td>
-                <td>{{ $tag->name }}</td>
-                <td>
-                    <!-- Здесь можно добавить действия для редактирования и удаления -->
-                    <a href="{{ route('tags.edit', $tag->id) }}">Edit</a>
-                    <form action="{{ route('tags.destroy', $tag->id) }}" method="POST" style="display:inline;">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit">Delete</button>
-                    </form>
-                </td>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Actions</th>
             </tr>
-        @endforeach
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            @foreach ($tags as $tag)
+                <tr>
+                    <td>{{ $tag->id }}</td>
+                    <td>{{ $tag->name }}</td>
+                    <td>
+                        <a href="{{ route('tags.show', $tag->id) }}" class="btn btn-info btn-sm">Show</a>
+                        <a href="{{ route('tags.edit', $tag->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                        <form action="{{ route('tags.destroy', $tag->id) }}" method="POST" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+    </div>
 @endsection

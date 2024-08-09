@@ -2,29 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreProductRequest;
-use App\Http\Requests\UpdateProductRequest;
-use App\Repositories\CategoryRepositoryInterface;
-use App\Repositories\ProductRepositoryInterface;
-use App\Repositories\TagRepositoryInterface;
-use App\Services\CatalogService;
+use App\Http\Requests\Product\StoreRequest;
+use App\Http\Requests\Product\UpdateRequest;
+use App\Interfaces\CategoryRepositoryInterface;
+use App\Interfaces\ProductRepositoryInterface;
+use App\Interfaces\TagRepositoryInterface;
+use App\Services\ProductService;
 use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
-    protected $catalogService;
+    protected $productService;
     protected $productRepository;
     protected $tagRepository;
     protected $categoriesRepository;
 
     public function __construct(
-        CatalogService              $catalogService,
+        ProductService              $productService,
         ProductRepositoryInterface  $productRepository,
         TagRepositoryInterface      $tagRepository,
         CategoryRepositoryInterface $categoriesRepository,
     )
     {
-        $this->catalogService = $catalogService;
+        $this->productService = $productService;
         $this->productRepository = $productRepository;
         $this->categoriesRepository = $categoriesRepository;
         $this->tagRepository = $tagRepository;
@@ -32,7 +32,9 @@ class ProductController extends Controller
 
     public function index()
     {
-        $products = $this->productRepository->all()->load('categories', 'tags')->map(function ($product) {
+        $products = $this->productRepository->paginate();
+
+        $products->getCollection()->transform(function ($product) {
             $product->category_name = $product->categories->pluck('name')->first();
             $product->tag_names = $product->tags->pluck('name')->implode(', ');
 
@@ -51,11 +53,11 @@ class ProductController extends Controller
     }
 
 
-    public function store(StoreProductRequest $request)
+    public function store(StoreRequest $request)
     {
         $data = $request->validated();
         try {
-            $product = $this->catalogService->createProduct($data);
+            $product = $this->productService->create($data);
             return response()->json([
                 'message' => 'Product added successfully!',
                 'product' => $product
@@ -89,11 +91,11 @@ class ProductController extends Controller
         return view('products.edit', compact('product', 'categories', 'tags'));
     }
 
-    public function update(UpdateProductRequest $request, $id)
+    public function update(UpdateRequest $request, $id)
     {
         $data = $request->validated();
         try {
-            $product = $this->catalogService->updateProduct($id, $data);
+            $product = $this->productService->update($id, $data);
             return response()->json([
                 'message' => 'Product updated successfully!',
                 'product' => $product
@@ -107,11 +109,11 @@ class ProductController extends Controller
     public function destroy($id)
     {
         try {
-            $this->catalogService->deleteProduct($id);
+            $this->productService->delete($id);
             return redirect()->route('products.index')->with('success', 'Product deleted successfully.');
         } catch (\Exception $e) {
-            Log::error('Ошибка при удалении продукта: ' . $e->getMessage());
-            return redirect()->route('products.index')->with('error', 'Ошибка при удалении продукта.');
+            Log::error('Error removing product.: ' . $e->getMessage());
+            return redirect()->route('products.index')->with('error', 'Error removing product..');
         }
     }
 }

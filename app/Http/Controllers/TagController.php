@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreTagRequest;
-use App\Http\Requests\UpdateTagRequest;
-use App\Models\Tag;
-use App\Repositories\TagRepositoryInterface;
-use App\Services\CatalogService;
+use App\Http\Requests\Tag\StoreRequest;
+use App\Http\Requests\Tag\UpdateRequest;
+use App\Interfaces\TagRepositoryInterface;
+use App\Services\TagService;
 
 class TagController extends Controller
 {
-    protected $catalogService;
+    protected $tagService;
     protected $tagRepository;
 
-    public function __construct(CatalogService $catalogService, TagRepositoryInterface $tagRepository)
+    public function __construct(TagService $tagService, TagRepositoryInterface $tagRepository)
     {
-        $this->catalogService = $catalogService;
+        $this->tagService = $tagService;
+        $this->tagRepository = $tagRepository;
+
     }
 
     public function create()
@@ -29,26 +30,42 @@ class TagController extends Controller
         return view('tags.index', compact('tags'));
     }
 
-    public function store(StoreTagRequest $request)
+    public function store(StoreRequest $request)
     {
         $data = $request->validated();
-        $tag = $this->catalogService->createTag($data);
+        $tag = $this->tagService->create($data);
 
-        return response()->json(['message' => 'Тег успешно создан', 'tag' => $tag], 201);
+        return response()->json(['message' => 'Tag created successfully', 'tag' => $tag], 201);
     }
 
-    public function update(UpdateTagRequest $request, $id)
+    public function show(string $id)
+    {
+        $tag = $this->tagService->find($id);
+
+        if (!$tag) {
+            abort(404, 'Category not found.');
+        }
+
+        return view('tags.show', compact('tag'));
+    }
+
+    public function edit($id)
+    {
+        $tag = $this->tagService->find($id);
+        return view('tags.edit', compact('tag'));
+    }
+    public function update(UpdateRequest $request, $id)
     {
         $data = $request->validated();
-        $tag = $this->catalogService->updateTag($id, $data);
+        $tag = $this->tagService->update($id, $data);
 
-        return response()->json(['message' => 'Тег успешно обновлен', 'tag' => $tag], 200);
+        return response()->json(['message' => 'Tag updated successfully', 'tag' => $tag], 200);
     }
 
-    public function delete($id)
+    public function destroy($id)
     {
-        $this->catalogService->deleteTag($id);
+        $this->tagService->delete($id);
 
-        return response()->json(['message' => 'Тег успешно удален'], 200);
+        return response()->json(['message' => 'Tag removed successfully'], 200);
     }
 }

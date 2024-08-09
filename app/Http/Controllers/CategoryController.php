@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreCategoryRequest;
-use App\Http\Requests\UpdateCategoryRequest;
-use App\Repositories\CategoryRepositoryInterface;
-use App\Services\CatalogService;
+use App\Http\Requests\Category\StoreRequest;
+use App\Http\Requests\Category\UpdateRequest;
+use App\Interfaces\CategoryRepositoryInterface;
+use App\Services\CategoryService;
 
 class CategoryController extends Controller
 {
-    protected $catalogService;
+    protected $categoryService;
     protected $categoryRepository;
 
-    public function __construct(CatalogService $catalogService, CategoryRepositoryInterface $categoryRepository)
+    public function __construct(CategoryService $categoryService, CategoryRepositoryInterface $categoryRepository)
     {
-        $this->catalogService = $catalogService;
+        $this->categoryService = $categoryService;
         $this->categoryRepository = $categoryRepository;
     }
 
@@ -29,26 +29,43 @@ class CategoryController extends Controller
         return view('categories.create');
     }
 
-    public function store(StoreCategoryRequest $request)
+    public function store(StoreRequest $request)
     {
         $data = $request->validated();
-        $category = $this->catalogService->createCategory($data);
+        $category = $this->categoryService->create($data);
 
-        return response()->json(['message' => 'Категория успешно создана', 'category' => $category], 201);
+        return response()->json(['message' => 'Category successfully created', 'category' => $category], 201);
     }
 
-    public function update(UpdateCategoryRequest $request, $id)
+    public function show(string $id)
+    {
+        $category = $this->categoryService->find($id);
+
+        if (!$category) {
+            abort(404, 'Category not found.');
+        }
+
+        return view('categories.show', compact('category'));
+    }
+
+    public function edit($id)
+    {
+        $category = $this->categoryRepository->find($id);
+        return view('categories.edit', compact('category'));
+    }
+
+    public function update(UpdateRequest $request, $id)
     {
         $data = $request->validated();
-        $category = $this->catalogService->updateCategory($id, $data);
+        $category = $this->categoryService->update($id, $data);
 
-        return response()->json(['message' => 'Категория успешно обновлена', 'category' => $category], 200);
+        return response()->json(['message' => 'Category updated successfully', 'category' => $category], 200);
     }
 
-    public function delete($id)
+    public function destroy($id)
     {
-        $this->catalogService->deleteCategory($id);
+        $this->categoryService->delete($id);
 
-        return response()->json(['message' => 'Категория успешно удалена'], 200);
+        return response()->json(['message' => 'Category successfully deleted'], 200);
     }
 }

@@ -1,46 +1,103 @@
-table {
+/* Устраняем любые внутренние отступы и устанавливаем базовые настройки */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* Основные стили таблиц */
+.table {
     width: 100%;
     border-collapse: collapse;
+    table-layout: auto; /* Позволяет таблице изменять размер в зависимости от содержимого */
 }
 
-th, td {
+/* Стили заголовков и ячеек таблицы */
+.table th, .table td {
+    border: 1px solid #dee2e6; /* Цвет границы таблицы */
+    padding: 0.75rem; /* Отступы для ячеек таблицы */
+}
+
+.table th {
+    background-color: #f8f9fa; /* Цвет фона заголовков таблицы */
+    text-align: left;
+}
+
+/* Настройка границы таблицы */
+.table-bordered {
     border: 1px solid #ddd;
-    padding: 8px;
 }
 
-th {
-    background-color: #f2f2f2;
-}
-
-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 14px;
-    margin: 4px 2px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-
+/* Стили ссылок */
 a {
     color: #007bff;
     text-decoration: none;
-    padding: 5px 10px;
-    border-radius: 4px;
 }
 
 a:hover {
     text-decoration: underline;
 }
 
-div {
+/* Стили кнопок */
+.btn-custom {
+    background-color: #007bff; /* Цвет фона кнопки */
+    color: white;
+    border: none;
+    padding: 0.375rem 0.75rem; /* Паддинг кнопки */
+    font-size: 0.875rem; /* Размер шрифта кнопки */
+    cursor: pointer;
+}
+
+.btn-custom:hover {
+    background-color: #0056b3;
+}
+
+/* Стили кнопок во формах */
+.form-group .btn {
+    border-radius: 0.25rem; /* Радиус границы кнопки */
+}
+
+/* Вторичные кнопки */
+.btn-secondary-custom {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-secondary-custom:hover {
+    background-color: #5a6268;
+}
+
+/* Стили сообщений */
+.alert-custom {
+    margin-bottom: 1rem;
+    border-radius: 0.25rem;
+}
+
+/* Стиль успешных сообщений */
+.alert-success-custom {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+/* Стиль сообщений об ошибке */
+.alert-danger-custom {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+/* Дополнительные стили для действий */
+.actions {
+    display: flex;
+    align-items: center;
+}
+
+.actions form {
+    margin-left: 5px;
+}
+
+/* Стили для блоков */
+.block {
     margin-bottom: 20px;
     padding: 10px;
     background-color: #d4edda;
@@ -48,51 +105,36 @@ div {
     border: 1px solid #c3e6cb;
     border-radius: 4px;
 }
+
+/* Стили для формы */
 .form-group {
     margin-bottom: 1rem;
 }
+
 .form-group label {
     display: block;
     font-weight: bold;
     margin-bottom: 0.5rem;
 }
+
 .form-group select, .form-group input, .form-group textarea {
     width: 100%;
     padding: 0.5rem;
-    border: 1px solid #ced4da;
-    border-radius: 0.25rem;
+    border: 1px solid #ced4da; /* Цвет границы поля формы */
+    border-radius: 0.25rem; /* Радиус границы поля формы */
 }
-.form-group button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 0.25rem;
-    cursor: pointer;
+
+/* Убедитесь, что контейнер fluid занимает всю доступную ширину */
+.container-fluid {
+    padding-right: 15px;
+    padding-left: 15px;
+    width: 100%;
+    margin-right: auto;
+    margin-left: auto;
 }
-.form-group button:hover {
-    background-color: #0056b3;
-}
-.form-group .btn-secondary {
-    background-color: #6c757d;
-    color: white;
-}
-.form-group .btn-secondary:hover {
-    background-color: #5a6268;
-}
-.alert {
-    padding: 0.75rem 1.25rem;
-    margin-bottom: 1rem;
-    border: 1px solid transparent;
-    border-radius: 0.25rem;
-}
-.alert-success {
-    color: #155724;
-    background-color: #d4edda;
-    border-color: #c3e6cb;
-}
-.alert-danger {
-    color: #721c24;
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
+
+/* Убедитесь, что таблица внутри .table-responsive растягивается на всю ширину */
+.table-responsive {
+    overflow-x: auto; /* Это позволит таблице прокручиваться по горизонтали, если она не помещается */
+    width: 100%;
 }
