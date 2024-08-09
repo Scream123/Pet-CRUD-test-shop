@@ -2,38 +2,25 @@
 
 namespace App\Models;
 
-use App\Helpers\SlugHelper;
+use App\Traits\Slugable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
     use HasFactory;
+    use Slugable;
 
     protected $fillable = ['name', 'description', 'slug'];
 
-    public static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($model) {
-            $model->slug = SlugHelper::generateSlug(self::class, $model->name);
-        });
-
-        static::updating(function ($model) {
-            if ($model->isDirty('name')) {
-                $model->slug = SlugHelper::generateSlug(self::class, $model->name);
-            }
-        });
-    }
-
     public function categories()
     {
-        return $this->belongsToMany(Category::class, 'product_category_tags', 'product_id', 'category_id')->withPivot('tag_id');
+        return $this->belongsToMany(Category::class, 'product_categories', 'product_id', 'category_id');
+
     }
 
     public function tags()
     {
-        return $this->belongsToMany(Tag::class, 'product_category_tags', 'product_id', 'tag_id')->withPivot('category_id');
+        return $this->belongsToMany(Tag::class, 'product_tags', 'product_id', 'tag_id');
     }
 }

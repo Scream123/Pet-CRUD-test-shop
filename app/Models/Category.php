@@ -2,43 +2,30 @@
 
 namespace App\Models;
 
-use App\Helpers\SlugHelper;
+use App\Traits\Slugable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 
 class Category extends Model
 {
     use HasFactory;
+    use Slugable;
 
-    protected $fillable = ['name', 'slug'];
+    protected $fillable = ['name', 'slug', 'parent_id'];
 
-    public static function boot()
+    public function parent()
     {
-        parent::boot();
-
-        static::creating(function ($model) {
-            $model->slug = SlugHelper::generateSlug(self::class, $model->name);
-        });
-
-        static::updating(function ($model) {
-            if ($model->isDirty('name')) {
-                $model->slug = $model->generateSlug($model->name);
-            }
-        });
+        return $this->belongsTo(Category::class, 'parent_id');
     }
 
-    public function generateSlug($name)
+    // Получение дочерних категорий
+    public function children()
     {
-        $slug = Str::slug($name);
-
-        $count = Category::where('slug', 'LIKE', "{$slug}%")->count();
-
-        return $count ? "{$slug}-{$count}" : $slug;
+        return $this->hasMany(Category::class, 'parent_id');
     }
 
     public function products()
     {
-        return $this->belongsToMany(Product::class, 'product_category_tags', 'category_id', 'product_id');
+        return $this->belongsToMany(Product::class, 'product_categories', 'category_id', 'product_id');
     }
 }
