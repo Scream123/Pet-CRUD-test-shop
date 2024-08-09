@@ -1,12 +1,15 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Product;
 
+use App\Traits\ValidationErrorHandler;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateProductRequest extends FormRequest
+class UpdateRequest extends FormRequest
 {
+    use ValidationErrorHandler;
+
     public function authorize()
     {
         return true;
@@ -19,9 +22,9 @@ class UpdateProductRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('products')->ignore($this->route('product'))
+                Rule::unique('products')->ignore((int) $this->route('product'))
             ],
-            'description' => 'required|string',
+            'description' => 'nullable|string',
             'category_id' => 'required|exists:categories,id',
             'tags' => 'required|array',
             'tags.*' => 'integer|exists:tags,id',
