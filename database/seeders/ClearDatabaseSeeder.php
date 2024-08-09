@@ -12,10 +12,11 @@ class ClearDatabaseSeeder extends Seeder
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
-        DB::table('product_category_tags')->truncate();
         DB::table('products')->truncate();
         DB::table('categories')->truncate();
         DB::table('tags')->truncate();
+        DB::table('product_categories')->truncate();
+        DB::table('product_tags')->truncate();
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }

@@ -6,35 +6,38 @@ use Illuminate\Database\Seeder;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Tag;
-use App\Models\ProductCategoryTag;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
     public function run()
     {
+        $this->call(ClearDatabaseSeeder::class);
+
         $products = Product::factory(10)->create();
         $categories = Category::factory(10)->create();
         $tags = Tag::factory(10)->create();
-
-        $productCategoryTagData = [];
 
         foreach ($products as $product) {
             $category = $categories->random();
 
             $productTags = $tags->random(rand(1, 3));
 
+            DB::table('product_categories')->insert([
+                'product_id' => $product->id,
+                'category_id' => $category->id,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
             foreach ($productTags as $tag) {
-                $productCategoryTagData[] = [
+                DB::table('product_tags')->insert([
                     'product_id' => $product->id,
-                    'category_id' => $category->id,
                     'tag_id' => $tag->id,
                     'created_at' => now(),
                     'updated_at' => now(),
-                ];
+                ]);
             }
         }
-
-        ProductCategoryTag::insert($productCategoryTagData);
     }
 }
-
