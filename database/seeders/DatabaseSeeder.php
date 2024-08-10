@@ -28,6 +28,8 @@ class DatabaseSeeder extends Seeder
             DB::table(ProductCategorySchema::TABLE)->insert([
                 ProductCategorySchema::PRODUCT_ID => $product->id,
                 ProductCategorySchema::CATEGORY_ID => $category->id,
+                ProductCategorySchema::CREATED_AT => now(),
+                ProductCategorySchema::UPDATED_AT => now(),
             ]);
 
             foreach ($productTags as $tag) {
