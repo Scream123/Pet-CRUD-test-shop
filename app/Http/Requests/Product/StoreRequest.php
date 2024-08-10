@@ -2,6 +2,9 @@
 
 namespace App\Http\Requests\Product;
 
+use App\Schema\CategorySchema;
+use App\Schema\ProductSchema;
+use App\Schema\TagSchema;
 use App\Traits\ValidationErrorHandler;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -27,11 +30,12 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|max:255|unique:products,name',
+            'name' => 'required|string|max:255|unique:' . ProductSchema::TABLE . ',' . ProductSchema::NAME,
+
             'description' => 'nullable|string',
-            'category_id' => 'required|exists:categories,id',
+            'category_id' => 'required|exists:' . CategorySchema::TABLE . ',' . CategorySchema::ID,
             'tags' => 'required|array',
-            'tags.*' => 'integer|exists:tags,id',
+            'tags.*' => 'integer|exists:' . TagSchema::TABLE . ',' . TagSchema::ID,
         ];
     }
 

@@ -2,10 +2,12 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use App\Models\Product;
 use App\Models\Category;
+use App\Models\Product;
 use App\Models\Tag;
+use App\Schema\ProductCategorySchema;
+use App\Schema\ProductTagSchema;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
@@ -23,19 +25,17 @@ class DatabaseSeeder extends Seeder
 
             $productTags = $tags->random(rand(1, 3));
 
-            DB::table('product_categories')->insert([
-                'product_id' => $product->id,
-                'category_id' => $category->id,
-                'created_at' => now(),
-                'updated_at' => now(),
+            DB::table(ProductCategorySchema::TABLE)->insert([
+                ProductCategorySchema::PRODUCT_ID => $product->id,
+                ProductCategorySchema::CATEGORY_ID => $category->id,
             ]);
 
             foreach ($productTags as $tag) {
-                DB::table('product_tags')->insert([
-                    'product_id' => $product->id,
-                    'tag_id' => $tag->id,
-                    'created_at' => now(),
-                    'updated_at' => now(),
+                DB::table(ProductTagSchema::TABLE)->insert([
+                    ProductTagSchema::PRODUCT_ID => $product->id,
+                    ProductTagSchema::TAG_ID => $tag->id,
+                    ProductTagSchema::CREATED_AT => now(),
+                    ProductTagSchema::UPDATED_AT => now(),
                 ]);
             }
         }

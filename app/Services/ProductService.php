@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Interfaces\ProductRepositoryInterface;
 use App\Models\Product;
+use App\Schema\ProductSchema;
 use Illuminate\Support\Facades\DB;
 
 class ProductService
@@ -41,8 +42,8 @@ class ProductService
             }
 
             $product->update([
-                'name' => $data['name'],
-                'description' => $data['description'],
+                ProductSchema::NAME => $data['name'],
+                ProductSchema::DESCRIPTION => $data['description'],
             ]);
 
             $product->categories()->detach();

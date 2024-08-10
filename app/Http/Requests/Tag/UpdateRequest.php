@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Tag;
 
+use App\Schema\TagSchema;
 use App\Traits\ValidationErrorHandler;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -24,7 +25,7 @@ class UpdateRequest extends FormRequest
                     'required',
                     'string',
                     'max:255',
-                    Rule::unique('tags')->ignore($this->route('tag')),
+                    Rule::unique(TagSchema::TABLE)->ignore($this->route('tag')),
                 ],
             ];
         }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Category;
 
+use App\Schema\CategorySchema;
 use App\Traits\ValidationErrorHandler;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -17,7 +18,7 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|max:255|unique:categories',
+            'name' => 'required|string|max:255|unique:' . CategorySchema::TABLE,
         ];
     }
 

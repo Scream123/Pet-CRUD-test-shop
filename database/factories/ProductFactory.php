@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Product;
+use App\Schema\ProductSchema;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ProductFactory extends Factory
@@ -12,9 +13,9 @@ class ProductFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->unique()->word,
-            'slug' => $this->faker->unique()->slug,
-            'description' => $this->faker->paragraph,
+            ProductSchema::NAME => $this->faker->unique()->word,
+            ProductSchema::SLUG => $this->faker->unique()->slug,
+            ProductSchema::DESCRIPTION => $this->faker->paragraph,
         ];
     }
 }

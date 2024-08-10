@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Category;
 
+use App\Schema\CategorySchema;
 use App\Traits\ValidationErrorHandler;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -18,7 +19,7 @@ class UpdateRequest extends FormRequest
                     'required',
                     'string',
                     'max:255',
-                    Rule::unique('categories')->ignore($this->route('category')),
+                    Rule::unique(CategorySchema::TABLE)->ignore($this->route('category')),
                 ],
             ];
         }

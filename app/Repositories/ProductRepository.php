@@ -6,6 +6,9 @@ use App\Interfaces\CategoryRepositoryInterface;
 use App\Interfaces\ProductRepositoryInterface;
 use App\Interfaces\TagRepositoryInterface;
 use App\Models\Product;
+use App\Schema\CategorySchema;
+use App\Schema\ProductSchema;
+use App\Schema\TagSchema;
 
 class ProductRepository implements ProductRepositoryInterface
 {
@@ -27,8 +30,8 @@ class ProductRepository implements ProductRepositoryInterface
     public function create(array $data): Product
     {
         $product = $this->model->create([
-            'name' => $data['name'],
-            'description' => $data['description'],
+            ProductSchema::NAME => $data['name'],
+            ProductSchema::DESCRIPTION => $data['description'],
         ]);
 
         if (isset($data['category_ids']) && is_array($data['category_ids'])) {
@@ -44,7 +47,7 @@ class ProductRepository implements ProductRepositoryInterface
 
     public function findByName($name)
     {
-        return $this->model->where('name', $name)->first();
+        return $this->model->where(ProductSchema::NAME, $name)->first();
     }
 
     public function find($id)
@@ -54,7 +57,7 @@ class ProductRepository implements ProductRepositoryInterface
 
     public function all()
     {
-        return $this->model->with('categories', 'tags')->get();
+        return $this->model->with(CategorySchema::TABLE, TagSchema::TABLE)->get();
     }
 
     public function update($id, array $data)
@@ -75,6 +78,6 @@ class ProductRepository implements ProductRepositoryInterface
     public function paginate($perPage = null)
     {
         $perPage = $perPage ?: config('pagination.per_page');
-        return $this->model->with('categories', 'tags')->paginate($perPage);
+        return $this->model->with(CategorySchema::TABLE, TagSchema::TABLE)->paginate($perPage);
     }
 }

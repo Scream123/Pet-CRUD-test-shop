@@ -2,9 +2,12 @@
 
 namespace Database\Seeders;
 
+use App\Schema\CategorySchema;
+use App\Schema\ProductCategorySchema;
+use App\Schema\ProductTagSchema;
+use App\Schema\TagSchema;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-
 
 class ClearDatabaseSeeder extends Seeder
 {
@@ -12,11 +15,11 @@ class ClearDatabaseSeeder extends Seeder
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
-        DB::table('products')->truncate();
-        DB::table('categories')->truncate();
-        DB::table('tags')->truncate();
-        DB::table('product_categories')->truncate();
-        DB::table('product_tags')->truncate();
+        DB::table(ProductTagSchema::TABLE)->truncate();
+        DB::table(CategorySchema::TABLE)->truncate();
+        DB::table(TagSchema::TABLE)->truncate();
+        DB::table(ProductCategorySchema::TABLE)->truncate();
+        DB::table(ProductTagSchema::TABLE)->truncate();
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }

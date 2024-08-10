@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Tag;
+use App\Schema\TagSchema;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -15,8 +16,8 @@ class TagFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->word,
-            'slug' => $this->faker->unique()->slug,
+            TagSchema::NAME => $this->faker->word,
+            TagSchema::SLUG => $this->faker->unique()->slug,
         ];
     }
 }
