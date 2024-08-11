@@ -9,6 +9,8 @@ use App\Models\Product;
 use App\Schema\CategorySchema;
 use App\Schema\ProductSchema;
 use App\Schema\TagSchema;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class ProductRepository implements ProductRepositoryInterface
 {
@@ -45,22 +47,17 @@ class ProductRepository implements ProductRepositoryInterface
         return $product;
     }
 
-    public function findByName($name)
-    {
-        return $this->model->where(ProductSchema::NAME, $name)->first();
-    }
-
-    public function find($id)
+    public function find(string $id): ?Product
     {
         return $this->model->findOrFail($id);
     }
 
-    public function all()
+    public function all(): Collection
     {
         return $this->model->with(CategorySchema::TABLE, TagSchema::TABLE)->get();
     }
 
-    public function update($id, array $data)
+    public function update(string $id, array $data): Product
     {
 
         $product = $this->find($id);
@@ -69,13 +66,13 @@ class ProductRepository implements ProductRepositoryInterface
         return $product;
     }
 
-    public function delete($id)
+    public function delete(string $id): void
     {
         $product = $this->find($id);
         $product->delete();
     }
 
-    public function paginate($perPage = null)
+    public function paginate(int $perPage = null): LengthAwarePaginator
     {
         $perPage = $perPage ?: config('pagination.per_page');
         return $this->model->with(CategorySchema::TABLE, TagSchema::TABLE)->paginate($perPage);

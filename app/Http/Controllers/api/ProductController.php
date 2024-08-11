@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
@@ -34,14 +36,14 @@ class ProductController extends Controller
         $this->tagRepository = $tagRepository;
     }
 
-    public function index()
+    public function index(): ProductCollection
     {
         $products = $this->productRepository->paginate();
 
         return new ProductCollection($products);
     }
 
-    public function store(StoreRequest $request)
+    public function store(StoreRequest $request): JsonResponse
     {
         $data = $request->validated();
         try {
@@ -56,7 +58,7 @@ class ProductController extends Controller
         }
     }
 
-    public function show($id)
+    public function show(string $id): JsonResponse|ProductResource
     {
         $product = $this->productRepository->find($id);
 
@@ -69,7 +71,7 @@ class ProductController extends Controller
         return new ProductResource($product);
     }
 
-    public function update(UpdateRequest $request, $id)
+    public function update(UpdateRequest $request, string $id): JsonResponse
     {
         $data = $request->validated();
         try {
@@ -84,7 +86,7 @@ class ProductController extends Controller
         }
     }
 
-    public function destroy($id): JsonResponse
+    public function destroy(string $id): JsonResponse
     {
         try {
             $this->productService->delete($id);

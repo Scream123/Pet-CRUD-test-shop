@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\Product;
 
 use App\Schema\CategorySchema;
@@ -17,7 +19,7 @@ class StoreRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -27,7 +29,7 @@ class StoreRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             'name' => 'required|string|max:255|unique:' . ProductSchema::TABLE . ',' . ProductSchema::NAME,
@@ -39,7 +41,7 @@ class StoreRequest extends FormRequest
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
             'name.unique' => 'Product with the name already exists.',

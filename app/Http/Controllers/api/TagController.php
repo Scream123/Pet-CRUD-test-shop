@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
@@ -23,14 +25,14 @@ class TagController extends Controller
 
     }
 
-    public function index()
+    public function index(): TagCollection
     {
         $categories = $this->tagRepository->paginate();
 
         return new TagCollection($categories);
     }
 
-    public function store(StoreRequest $request)
+    public function store(StoreRequest $request): JsonResponse
     {
         $data = $request->validated();
         $tag = $this->tagService->create($data);
@@ -38,7 +40,7 @@ class TagController extends Controller
         return response()->json(['message' => 'Ефп successfully created', 'category' => $tag], 201);
     }
 
-    public function show($id)
+    public function show(string $id): TagResource|JsonResponse
     {
         $category = $this->tagRepository->find($id);
 
@@ -49,7 +51,7 @@ class TagController extends Controller
         return new TagResource($category);
     }
 
-    public function update(UpdateRequest $request, $id)
+    public function update(UpdateRequest $request, string $id): JsonResponse
     {
         $data = $request->validated();
         $tag = $this->tagService->update($id, $data);
@@ -57,7 +59,7 @@ class TagController extends Controller
         return response()->json(['message' => 'Tag successfully updated', 'tag' => $tag], 200);
     }
 
-    public function destroy($id): JsonResponse
+    public function destroy(string $id): JsonResponse
     {
         try {
             $this->tagService->delete($id);

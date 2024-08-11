@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Product\StoreRequest;
@@ -8,7 +10,10 @@ use App\Interfaces\CategoryRepositoryInterface;
 use App\Interfaces\ProductRepositoryInterface;
 use App\Interfaces\TagRepositoryInterface;
 use App\Services\ProductService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Log;
+use Illuminate\View\View;
 
 class ProductController extends Controller
 {
@@ -30,7 +35,7 @@ class ProductController extends Controller
         $this->tagRepository = $tagRepository;
     }
 
-    public function index()
+    public function index(): View
     {
         $products = $this->productRepository->paginate();
 
@@ -45,7 +50,7 @@ class ProductController extends Controller
     }
 
 
-    public function create()
+    public function create(): View
     {
         $categories = $this->categoriesRepository->all();
         $tags = $this->tagRepository->all();
@@ -54,7 +59,7 @@ class ProductController extends Controller
     }
 
 
-    public function store(StoreRequest $request)
+    public function store(StoreRequest $request): JsonResponse
     {
         $data = $request->validated();
         try {
@@ -69,7 +74,7 @@ class ProductController extends Controller
         }
     }
 
-    public function show($id)
+    public function show(string $id): View
     {
         $product = $this->productRepository->find($id)->load('categories', 'tags');
 
@@ -84,7 +89,7 @@ class ProductController extends Controller
     }
 
 
-    public function edit($id)
+    public function edit(string $id): View
     {
         $product = $this->productRepository->find($id);
         $categories = $this->categoriesRepository->all();
@@ -92,7 +97,7 @@ class ProductController extends Controller
         return view('products.edit', compact('product', 'categories', 'tags'));
     }
 
-    public function update(UpdateRequest $request, $id)
+    public function update(UpdateRequest $request, string $id): JsonResponse
     {
         $data = $request->validated();
         try {
@@ -107,7 +112,7 @@ class ProductController extends Controller
         }
     }
 
-    public function destroy($id)
+    public function destroy(string $id): RedirectResponse
     {
         try {
             $this->productService->delete($id);

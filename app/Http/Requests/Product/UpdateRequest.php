@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\Product;
 
 use App\Schema\CategorySchema;
@@ -13,12 +15,12 @@ class UpdateRequest extends FormRequest
 {
     use ValidationErrorHandler;
 
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
 
-    public function rules()
+    public function rules(): array
     {
         return [
             'name' => [
@@ -34,7 +36,7 @@ class UpdateRequest extends FormRequest
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
             'name.unique' => 'Product with the name already exists.',

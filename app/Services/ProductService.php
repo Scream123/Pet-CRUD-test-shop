@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\Interfaces\ProductRepositoryInterface;
@@ -31,7 +33,7 @@ class ProductService
         return $product;
     }
 
-    public function update($id, array $data): Product
+    public function update(string $id, array $data): Product
     {
         DB::beginTransaction();
 
@@ -63,8 +65,8 @@ class ProductService
         }
     }
 
-    public function delete($id)
+    public function delete(string $id): void
     {
-        return $this->productRepository->delete($id);
+        $this->productRepository->delete($id);
     }
 }

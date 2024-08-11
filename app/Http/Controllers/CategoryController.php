@@ -1,11 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Category\StoreRequest;
 use App\Http\Requests\Category\UpdateRequest;
 use App\Interfaces\CategoryRepositoryInterface;
 use App\Services\CategoryService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\View\View;
 
 class CategoryController extends Controller
 {
@@ -18,7 +22,7 @@ class CategoryController extends Controller
         $this->categoryRepository = $categoryRepository;
     }
 
-    public function index()
+    public function index(): View
     {
         $categories = $this->categoryRepository->all();
         return view('categories.index', compact('categories'));
@@ -29,7 +33,7 @@ class CategoryController extends Controller
         return view('categories.create');
     }
 
-    public function store(StoreRequest $request)
+    public function store(StoreRequest $request): JsonResponse
     {
         $data = $request->validated();
         $category = $this->categoryService->create($data);
@@ -37,7 +41,7 @@ class CategoryController extends Controller
         return response()->json(['message' => 'Category successfully created', 'category' => $category], 201);
     }
 
-    public function show(string $id)
+    public function show(string $id): View
     {
         $category = $this->categoryService->find($id);
 
@@ -54,7 +58,7 @@ class CategoryController extends Controller
         return view('categories.edit', compact('category'));
     }
 
-    public function update(UpdateRequest $request, $id)
+    public function update(UpdateRequest $request, string $id): JsonResponse
     {
         $data = $request->validated();
         $category = $this->categoryService->update($id, $data);
@@ -62,7 +66,7 @@ class CategoryController extends Controller
         return response()->json(['message' => 'Category updated successfully', 'category' => $category], 200);
     }
 
-    public function destroy($id)
+    public function destroy(string $id): JsonResponse
     {
         $this->categoryService->delete($id);
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\Interfaces\TagRepositoryInterface;
@@ -14,7 +16,7 @@ class TagService
         $this->tagRepository = $tagRepository;
     }
 
-    public function find(string $id): ? Tag
+    public function find(string $id): ?Tag
     {
         return $this->tagRepository->find($id);
     }
@@ -24,12 +26,12 @@ class TagService
         return $this->tagRepository->create($data);
     }
 
-    public function update($id, array $data)
+    public function update(string $id, array $data): Tag
     {
         return $this->tagRepository->update($id, $data);
     }
 
-    public function delete($id)
+    public function delete(string $id): void
     {
         $this->tagRepository->delete($id);
     }

@@ -1,11 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Tag\StoreRequest;
 use App\Http\Requests\Tag\UpdateRequest;
 use App\Interfaces\TagRepositoryInterface;
 use App\Services\TagService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\View\View;
 
 class TagController extends Controller
 {
@@ -18,19 +22,19 @@ class TagController extends Controller
         $this->tagRepository = $tagRepository;
 
     }
-
-    public function create()
-    {
-        return view('tags.create');
-    }
-
-    public function index()
+    public function index(): View
     {
         $tags = $this->tagRepository->all();
         return view('tags.index', compact('tags'));
     }
+    public function create(): View
+    {
+        return view('tags.create');
+    }
 
-    public function store(StoreRequest $request)
+
+
+    public function store(StoreRequest $request): JsonResponse
     {
         $data = $request->validated();
         $tag = $this->tagService->create($data);
@@ -38,7 +42,7 @@ class TagController extends Controller
         return response()->json(['message' => 'Tag created successfully', 'tag' => $tag], 201);
     }
 
-    public function show(string $id)
+    public function show(string $id): View
     {
         $tag = $this->tagService->find($id);
 
@@ -49,12 +53,12 @@ class TagController extends Controller
         return view('tags.show', compact('tag'));
     }
 
-    public function edit($id)
+    public function edit(string $id): View
     {
         $tag = $this->tagService->find($id);
         return view('tags.edit', compact('tag'));
     }
-    public function update(UpdateRequest $request, $id)
+    public function update(UpdateRequest $request, string $id): JsonResponse
     {
         $data = $request->validated();
         $tag = $this->tagService->update($id, $data);
@@ -62,7 +66,7 @@ class TagController extends Controller
         return response()->json(['message' => 'Tag updated successfully', 'tag' => $tag], 200);
     }
 
-    public function destroy($id)
+    public function destroy(string $id): JsonResponse
     {
         $this->tagService->delete($id);
 

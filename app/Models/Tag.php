@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Schema\ProductTagSchema;
@@ -7,6 +9,7 @@ use App\Schema\TagSchema;
 use App\Traits\Slugable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Tag extends Model
 {
@@ -18,7 +21,7 @@ class Tag extends Model
         TagSchema::SLUG,
     ];
 
-    public function products()
+    public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, ProductTagSchema::TABLE);
     }

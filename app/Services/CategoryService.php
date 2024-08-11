@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\Interfaces\CategoryRepositoryInterface;
@@ -23,12 +25,12 @@ class CategoryService
         return $this->categoryRepository->create($data);
     }
 
-    public function update($id, array $data): Category
+    public function update(string $id, array $data): Category
     {
         return $this->categoryRepository->update($id, $data);
     }
 
-    public function delete($id): void
+    public function delete(string $id): void
     {
         $this->categoryRepository->delete($id);
     }

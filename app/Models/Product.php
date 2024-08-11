@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Schema\ProductCategorySchema;
@@ -8,6 +10,7 @@ use App\Schema\ProductTagSchema;
 use App\Traits\Slugable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Product extends Model
 {
@@ -21,14 +24,24 @@ class Product extends Model
 
     ];
 
-    public function categories()
+    public function categories(): BelongsToMany
     {
-        return $this->belongsToMany(Category::class, ProductCategorySchema::TABLE, ProductCategorySchema::PRODUCT_ID, ProductCategorySchema::CATEGORY_ID);
+        return $this->belongsToMany(
+            Category::class,
+            ProductCategorySchema::TABLE,
+            ProductCategorySchema::PRODUCT_ID,
+            ProductCategorySchema::CATEGORY_ID
+        );
 
     }
 
-    public function tags()
+    public function tags(): BelongsToMany
     {
-        return $this->belongsToMany(Tag::class, ProductTagSchema::TABLE, ProductTagSchema::PRODUCT_ID, ProductTagSchema::TAG_ID);
+        return $this->belongsToMany(
+            Tag::class,
+            ProductTagSchema::TABLE,
+            ProductTagSchema::PRODUCT_ID,
+            ProductTagSchema::TAG_ID
+        );
     }
 }

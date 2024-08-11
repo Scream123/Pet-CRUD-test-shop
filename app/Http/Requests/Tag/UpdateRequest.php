@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\Tag;
 
 use App\Schema\TagSchema;
@@ -12,12 +14,12 @@ class UpdateRequest extends FormRequest
     use ValidationErrorHandler;
 
 
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
 
-    public function rules()
+    public function rules(): array
     {
         {
             return [
@@ -31,7 +33,7 @@ class UpdateRequest extends FormRequest
         }
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
             'name.unique' => 'Tag with the name already exists.',

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\Tag;
 
 use App\Schema\TagSchema;
@@ -15,14 +17,14 @@ class StoreRequest extends FormRequest
         return true;
     }
 
-    public function rules()
+    public function rules(): array
     {
         return [
             'name' => 'required|string|max:255|unique:' . TagSchema::TABLE,
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
             'name.unique' => 'Tag with the name already exists.',];

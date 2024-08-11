@@ -1,9 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repositories;
 
 use App\Interfaces\TagRepositoryInterface;
 use App\Models\Tag;
+use \Illuminate\Support\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class TagRepository implements TagRepositoryInterface
 {
@@ -14,11 +18,11 @@ class TagRepository implements TagRepositoryInterface
         $this->model = $model;
     }
 
-    public function find($id): ?Tag
+    public function find(string $id): ?Tag
     {
         return $this->model->find($id);
     }
-    public function all()
+    public function all(): Collection
     {
         return $this->model->all();
     }
@@ -35,13 +39,15 @@ class TagRepository implements TagRepositoryInterface
         return $tag;
     }
 
-    public function delete($id): void
+    public function delete(string $id): void
     {
         $tag = $this->find($id);
         $tag->delete();
     }
-    public function paginate($perPage = 15)
+    public function paginate(int $perPage = null): LengthAwarePaginator
     {
+        $perPage = $perPage ?: config('pagination.per_page');
+
         return $this->model->paginate($perPage);
     }
 }

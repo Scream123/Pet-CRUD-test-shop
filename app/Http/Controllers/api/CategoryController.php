@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
@@ -17,7 +19,7 @@ class CategoryController extends Controller
     protected $categoryRepository;
 
     public function __construct(
-        CategoryService $categoryService,
+        CategoryService             $categoryService,
         CategoryRepositoryInterface $categoryRepository)
     {
         $this->categoryService = $categoryService;
@@ -25,14 +27,14 @@ class CategoryController extends Controller
     }
 
 
-    public function index()
+    public function index(): CategoryCollection
     {
         $categories = $this->categoryRepository->paginate();
 
         return new CategoryCollection($categories);
     }
 
-    public function store(StoreRequest $request)
+    public function store(StoreRequest $request): JsonResponse
     {
         $data = $request->validated();
         $category = $this->categoryService->create($data);
@@ -40,7 +42,7 @@ class CategoryController extends Controller
         return response()->json(['message' => 'Category successfully created', 'category' => $category], 201);
     }
 
-    public function show($id)
+    public function show(string $id): JsonResponse|CategoryResource
     {
         $category = $this->categoryService->find($id);
 
@@ -51,7 +53,7 @@ class CategoryController extends Controller
         return new CategoryResource($category);
     }
 
-    public function update(UpdateRequest $request, $id)
+    public function update(UpdateRequest $request, string $id): JsonResponse
     {
         $data = $request->validated();
         $category = $this->categoryService->update($id, $data);
@@ -59,7 +61,7 @@ class CategoryController extends Controller
         return response()->json(['message' => 'Category successfully updated', 'category' => $category], 200);
     }
 
-    public function destroy($id): JsonResponse
+    public function destroy(string $id): JsonResponse
     {
         try {
             $this->categoryService->delete($id);

@@ -1,9 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repositories;
 
 use App\Interfaces\CategoryRepositoryInterface;
 use App\Models\Category;
+use App\Models\Tag;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class CategoryRepository implements CategoryRepositoryInterface
 {
@@ -14,11 +19,11 @@ class CategoryRepository implements CategoryRepositoryInterface
         $this->model = $model;
     }
 
-    public function find($id): ?Category
+    public function find(string $id): ?Category
     {
         return $this->model->find($id);
     }
-    public function all()
+    public function all(): Collection
     {
         return $this->model->all();
     }
@@ -27,21 +32,22 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $this->model->create($data);
     }
 
-    public function update($id, array $data): Category
+    public function update(string $id, array $data): Category
     {
         $category = $this->find($id);
         $category->update($data);
         return $category;
     }
 
-    public function delete($id): void
+    public function delete(string $id): void
     {
         $category = $this->find($id);
         $category->delete();
     }
-    public function paginate($perPage = 15)
+    public function paginate(int $perPage = null): LengthAwarePaginator
     {
-        return Category::with('parent')
-        ->paginate($perPage);
+        $perPage = $perPage ?: config('pagination.per_page');
+
+        return Tag::paginate($perPage);
     }
 }
