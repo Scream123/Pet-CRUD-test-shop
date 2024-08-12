@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Schema\CategorySchema;
 use App\Schema\ProductCategorySchema;
+use App\Traits\FormatsDates;
 use App\Traits\Slugable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,6 +18,7 @@ class Category extends Model
 {
     use HasFactory;
     use Slugable;
+    use FormatsDates;
 
     protected $fillable = [
         CategorySchema::NAME,
@@ -29,7 +31,6 @@ class Category extends Model
         return $this->belongsTo(Category::class, CategorySchema::PARENT_ID);
     }
 
-    // Получение дочерних категорий
     public function children(): HasMany
     {
         return $this->hasMany(

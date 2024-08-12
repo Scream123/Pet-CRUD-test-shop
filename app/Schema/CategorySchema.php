@@ -12,4 +12,6 @@ class CategorySchema
     const NAME = 'name';
     const SLUG = 'slug';
     const PARENT_ID = 'parent_id';
+    const CREATED_AT = 'created_at';
+    const UPDATED_AT = 'updated_at';
 }

@@ -16,8 +16,8 @@ class CategoryFactory extends Factory
     public function definition()
     {
         return [
-            CategorySchema::NAME => $this->faker->word,
-            CategorySchema::SLUG => $this->faker->slug,
+            CategorySchema::NAME => $this->faker->unique()->word,
+            CategorySchema::SLUG => $this->faker->unique()->slug,
         ];
     }
 }

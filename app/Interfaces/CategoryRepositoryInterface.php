@@ -12,7 +12,6 @@ interface CategoryRepositoryInterface
 {
     public function find(string $id): ?Category;
     public function all(): Collection;
-
     public function create(array $data): Category;
     public function update(string $id, array $data): Category;
     public function delete(string $id): void;

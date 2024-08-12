@@ -6,7 +6,6 @@ namespace App\Repositories;
 
 use App\Interfaces\CategoryRepositoryInterface;
 use App\Models\Category;
-use App\Models\Tag;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
@@ -46,8 +45,8 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
     public function paginate(int $perPage = null): LengthAwarePaginator
     {
-        $perPage = $perPage ?: config('pagination.per_page');
+        $perPage = $perPage ?: config('pagination.per_page', 15); // Убедитесь, что по умолчанию используется 15 записей
 
-        return Tag::paginate($perPage);
+        return $this->model->paginate($perPage);
     }
 }
