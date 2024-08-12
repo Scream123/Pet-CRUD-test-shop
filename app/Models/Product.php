@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Schema\ProductCategorySchema;
 use App\Schema\ProductSchema;
 use App\Schema\ProductTagSchema;
+use App\Traits\FormatsDates;
 use App\Traits\Slugable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,6 +17,7 @@ class Product extends Model
 {
     use HasFactory;
     use Slugable;
+    use FormatsDates;
 
     protected $fillable = [
         ProductSchema::NAME,
