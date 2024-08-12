@@ -16,7 +16,7 @@ class TagFactory extends Factory
     public function definition()
     {
         return [
-            TagSchema::NAME => $this->faker->word,
+            TagSchema::NAME => $this->faker->unique()->word,
             TagSchema::SLUG => $this->faker->unique()->slug,
         ];
     }
