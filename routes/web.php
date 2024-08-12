@@ -19,6 +19,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::Resource('products', ProductController::class);
-Route::Resource('categories', CategoryController::class);
-Route::Resource('tags', TagController::class);
+Route::resource('products', ProductController::class)->names('web.products');
+Route::resource('categories', CategoryController::class)->names('web.categories');
+Route::resource('tags', TagController::class)->names('web.tags');
