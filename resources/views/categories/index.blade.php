@@ -6,8 +6,8 @@
         <h1 class="mb-4">Categories</h1>
 
         <div class="mb-3">
-            <a href="{{ route('categories.create') }}" class="btn btn-primary">Create New Category</a>
-            <a href="{{ route('products.index') }}" class="btn btn-secondary">Back to List</a>
+            <a href="{{ route('web.categories.create') }}" class="btn btn-primary">Create New Category</a>
+            <a href="{{ route('web.products.index') }}" class="btn btn-secondary">Back to List</a>
         </div>
 
         @if ($message = Session::get('success'))

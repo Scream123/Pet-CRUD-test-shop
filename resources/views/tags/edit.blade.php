@@ -22,7 +22,7 @@
                     <!-- Submit and Back Buttons -->
                     <div class="mb-3">
                         <button type="submit" class="btn btn-primary">Update Tag</button>
-                        <a href="{{ route('tags.index') }}" class="btn btn-secondary">Back to List</a>
+                        <a href="{{ route('web.tags.index') }}" class="btn btn-secondary">Back to List</a>
                     </div>
                 </form>
             </div>

@@ -19,7 +19,7 @@
 
             <div class="mb-3">
                 <button type="submit" class="btn btn-primary">Add Category</button>
-                <a href="{{ route('products.index') }}" class="btn btn-secondary">Back to List</a>
+                <a href="{{ route('web.products.index') }}" class="btn btn-secondary">Back to List</a>
             </div>
         </form>
     </div>

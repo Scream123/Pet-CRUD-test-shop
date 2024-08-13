@@ -22,7 +22,7 @@
                             onclick="return confirm('Are you sure you want to delete this tag?')">Delete
                     </button>
                 </form>
-                <a href="{{ route('tags.index') }}" class="btn btn-secondary">Back to List</a>
+                <a href="{{ route('web.tags.index') }}" class="btn btn-secondary">Back to List</a>
             </div>
         </div>
     </div>

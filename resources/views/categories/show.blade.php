@@ -22,7 +22,7 @@
                             onclick="return confirm('Are you sure you want to delete this category?')">Delete
                     </button>
                 </form>
-                <a href="{{ route('categories.index') }}" class="btn btn-secondary">Back to List</a>
+                <a href="{{ route('web.categories.index') }}" class="btn btn-secondary">Back to List</a>
             </div>
         </div>
     </div>

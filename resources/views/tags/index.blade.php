@@ -5,8 +5,8 @@
         <h1 class="mb-4">Tags</h1>
 
         <div class="mb-3">
-            <a href="{{ route('tags.create') }}" class="btn btn-primary">Add New Tag</a>
-            <a href="{{ route('products.index') }}" class="btn btn-secondary">Back to List</a>
+            <a href="{{ route('web.tags.create') }}" class="btn btn-primary">Add New Tag</a>
+            <a href="{{ route('web.products.index') }}" class="btn btn-secondary">Back to List</a>
         </div>
 
         @if ($message = Session::get('success'))

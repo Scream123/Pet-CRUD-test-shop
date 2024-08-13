@@ -6,11 +6,11 @@
             <!-- Sidebar -->
             <div class="col-md-3">
                 <div class="list-group">
-                    <a href="{{ route('products.create') }}" class="list-group-item list-group-item-action">Create New Product</a>
-                    <a href="{{ route('categories.create') }}" class="list-group-item list-group-item-action">Add New Category</a>
-                    <a href="{{ route('tags.create') }}" class="list-group-item list-group-item-action">Add New Tag</a>
-                    <a href="{{ route('tags.index') }}" class="list-group-item list-group-item-action">List of Tags</a>
-                    <a href="{{ route('categories.index') }}" class="list-group-item list-group-item-action">List of Categories</a>
+                    <a href="{{ route('web.products.create') }}" class="list-group-item list-group-item-action">Create New Product</a>
+                    <a href="{{ route('web.categories.create') }}" class="list-group-item list-group-item-action">Add New Category</a>
+                    <a href="{{ route('web.tags.create') }}" class="list-group-item list-group-item-action">Add New Tag</a>
+                    <a href="{{ route('web.tags.index') }}" class="list-group-item list-group-item-action">List of Tags</a>
+                    <a href="{{ route('web.categories.index') }}" class="list-group-item list-group-item-action">List of Categories</a>
                 </div>
             </div>
 

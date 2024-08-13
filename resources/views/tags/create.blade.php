@@ -17,7 +17,7 @@
                 <input type="text" id="name" name="name" class="form-control" required>
             </div>
             <button type="submit" class="btn btn-primary">Add Tag</button>
-            <a href="{{ route('products.index') }}" class="btn btn-secondary">Back to List</a>
+            <a href="{{ route('web.products.index') }}" class="btn btn-secondary">Back to List</a>
 
         </form>
     </div>

@@ -31,7 +31,7 @@
                 <p><strong>Updated At:</strong> {{ $product->updated_at }}</p>
             </div>
             <div class="card-footer">
-                <a href="{{ route('products.edit', $product->id) }}" class="btn btn-primary">Edit</a>
+                <a href="{{ route('web.products.edit', $product->id) }}" class="btn btn-primary">Edit</a>
                 <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display:inline;">
                     @csrf
                     @method('DELETE')
@@ -39,7 +39,7 @@
                             onclick="return confirm('Are you sure you want to delete this product?')">Delete
                     </button>
                 </form>
-                <a href="{{ route('products.index') }}" class="btn btn-secondary">Back to List</a>
+                <a href="{{ route('web.products.index') }}" class="btn btn-secondary">Back to List</a>
             </div>
         </div>
     </div>
