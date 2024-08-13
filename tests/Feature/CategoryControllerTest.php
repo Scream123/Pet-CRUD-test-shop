@@ -16,7 +16,7 @@ class CategoryControllerTest extends TestCase
     use RefreshDatabase;
     use WithFaker;
 
-    public function test_index()
+    public function test_index_categories()
     {
         $categories = Category::factory()->count(10)->create();
 
@@ -41,7 +41,7 @@ class CategoryControllerTest extends TestCase
         $response->assertJson([]);
     }
 
-    public function test_store()
+    public function test_store_category()
     {
         $data = Category::factory()->make()->toArray();
 
@@ -69,7 +69,7 @@ class CategoryControllerTest extends TestCase
         ]);
     }
 
-    public function test_store_invalid_data()
+    public function test_store_invalid_data_categories()
     {
         $data = [];
 
@@ -79,7 +79,7 @@ class CategoryControllerTest extends TestCase
         $response->assertJsonValidationErrors(['name']);
     }
 
-    public function test_show()
+    public function test_show_category()
     {
         $category = Category::factory()->create();
 
@@ -111,7 +111,7 @@ class CategoryControllerTest extends TestCase
         ]);
     }
 
-    public function test_update()
+    public function test_update_categories()
     {
         $category = Category::factory()->create();
 
@@ -149,7 +149,7 @@ class CategoryControllerTest extends TestCase
         ]);
     }
 
-    public function test_update_invalid_data()
+    public function test_update_invalid_data_categories()
     {
         $category = Category::factory()->create();
 
@@ -163,7 +163,8 @@ class CategoryControllerTest extends TestCase
         $response->assertJsonValidationErrors(['name']);
     }
 
-    public function test_update_name_already_exists()
+
+    public function test_update_name_already_exists_categories()
     {
         // Create two categories: one with the existing name and the other, which we will update
         $category1 = Category::factory()->create(['name' => 'Existing Name']);
@@ -179,7 +180,7 @@ class CategoryControllerTest extends TestCase
         $response->assertJsonValidationErrors(['name']);
     }
 
-    public function test_delete()
+    public function test_delete_category()
     {
         $category = Category::factory()->create();
 
