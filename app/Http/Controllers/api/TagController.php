@@ -11,6 +11,7 @@ use App\Http\Resources\Tag\TagCollection;
 use App\Http\Resources\Tag\TagResource;
 use App\Interfaces\TagRepositoryInterface;
 use App\Services\TagService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 
 class TagController extends Controller
@@ -27,9 +28,9 @@ class TagController extends Controller
 
     public function index(): TagCollection
     {
-        $categories = $this->tagRepository->paginate();
+        $tags = $this->tagRepository->paginate();
 
-        return new TagCollection($categories);
+        return new TagCollection($tags);
     }
 
     public function store(StoreRequest $request): JsonResponse
@@ -37,18 +38,18 @@ class TagController extends Controller
         $data = $request->validated();
         $tag = $this->tagService->create($data);
 
-        return response()->json(['message' => 'Ефп successfully created', 'category' => $tag], 201);
+        return response()->json(['message' => 'Tag successfully created', 'tag' => $tag], 201);
     }
 
     public function show(string $id): TagResource|JsonResponse
     {
-        $category = $this->tagRepository->find($id);
+        $tag = $this->tagRepository->find($id);
 
-        if (!$category) {
-            return response()->json(['message' => 'Category not found.'], 404);
+        if (!$tag) {
+            return response()->json(['message' => 'Tag not found.'], 404);
         }
 
-        return new TagResource($category);
+        return new TagResource($tag);
     }
 
     public function update(UpdateRequest $request, string $id): JsonResponse
@@ -65,6 +66,8 @@ class TagController extends Controller
             $this->tagService->delete($id);
 
             return response()->json(['message' => 'Tag deleted successfully.'], 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'Tag not found.'], 404);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Error removing tag.'], 500);
         }
