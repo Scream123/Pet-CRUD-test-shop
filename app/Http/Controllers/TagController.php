@@ -8,6 +8,7 @@ use App\Http\Requests\Tag\StoreRequest;
 use App\Http\Requests\Tag\UpdateRequest;
 use App\Interfaces\TagRepositoryInterface;
 use App\Services\TagService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
 
@@ -22,16 +23,17 @@ class TagController extends Controller
         $this->tagRepository = $tagRepository;
 
     }
+
     public function index(): View
     {
         $tags = $this->tagRepository->all();
         return view('tags.index', compact('tags'));
     }
+
     public function create(): View
     {
         return view('tags.create');
     }
-
 
 
     public function store(StoreRequest $request): JsonResponse
@@ -47,7 +49,7 @@ class TagController extends Controller
         $tag = $this->tagService->find($id);
 
         if (!$tag) {
-            abort(404, 'Category not found.');
+            abort(404, 'Tag not found.');
         }
 
         return view('tags.show', compact('tag'));
@@ -58,6 +60,7 @@ class TagController extends Controller
         $tag = $this->tagService->find($id);
         return view('tags.edit', compact('tag'));
     }
+
     public function update(UpdateRequest $request, string $id): JsonResponse
     {
         $data = $request->validated();
@@ -68,8 +71,14 @@ class TagController extends Controller
 
     public function destroy(string $id): JsonResponse
     {
-        $this->tagService->delete($id);
+        try {
+            $this->tagService->delete($id);
 
-        return response()->json(['message' => 'Tag removed successfully'], 200);
+            return response()->json(['message' => 'Tag deleted successfully.'], 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'Tag not found.'], 404);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error removing tag.'], 500);
+        }
     }
 }
