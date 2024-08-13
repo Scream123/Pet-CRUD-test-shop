@@ -7,7 +7,6 @@ use App\Schema\CategorySchema;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
@@ -35,12 +34,13 @@ class CategoryControllerTest extends TestCase
         }
     }
 
+    public function test_index_no_categories()
+    {
+        $response = $this->get('/api/categories');
+        $response->assertStatus(Response::HTTP_OK);
+        $response->assertJson([]);
+    }
 
-
-
-
-
-    /** @test */
     public function test_store()
     {
         $data = Category::factory()->make()->toArray();
@@ -66,15 +66,20 @@ class CategoryControllerTest extends TestCase
         $this->assertDatabaseHas(CategorySchema::TABLE, [
             CategorySchema::NAME => $data['name'],
             CategorySchema::SLUG => $responseData['slug'],
-
         ]);
     }
 
+    public function test_store_invalid_data()
+    {
+        $data = [];
 
+        $response = $this->post('/api/categories', $data);
 
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJsonValidationErrors(['name']);
+    }
 
-    /** @test */
-    public function test_show_existing_category()
+    public function test_show()
     {
         $category = Category::factory()->create();
 
@@ -85,7 +90,7 @@ class CategoryControllerTest extends TestCase
 
         $createdAt = Carbon::parse($category->created_at)->format('Y-m-d H:i:s');
         $updatedAt = Carbon::parse($category->updated_at)->format('Y-m-d H:i:s');
-        $response->assertJson(['data'=>[
+        $response->assertJson(['data' => [
             'id' => $category->id,
             'name' => $category->name,
             'slug' => $category->slug,
@@ -130,28 +135,74 @@ class CategoryControllerTest extends TestCase
         ]);
     }
 
+    public function test_update_non_existing_category()
+    {
+        $updateData = [
+            CategorySchema::NAME => 'Updated Category Name ' . Str::random(5),
+        ];
 
+        $response = $this->put('/api/categories/' . Str::uuid()->toString(), $updateData);
 
+        $response->assertStatus(Response::HTTP_NOT_FOUND);
+        $response->assertJson([
+            'message' => 'Category not found.',
+        ]);
+    }
 
+    public function test_update_invalid_data()
+    {
+        $category = Category::factory()->create();
 
+        $updateData = [
+            CategorySchema::NAME => '',
+        ];
 
+        $response = $this->put('/api/categories/' . $category->id, $updateData);
 
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJsonValidationErrors(['name']);
+    }
 
+    public function test_update_name_already_exists()
+    {
+        // Create two categories: one with the existing name and the other, which we will update
+        $category1 = Category::factory()->create(['name' => 'Existing Name']);
+        $category2 = Category::factory()->create();
 
+        $updateData = [
+            CategorySchema::NAME => 'Existing Name',
+        ];
 
-    /** @test */
+        $response = $this->put('/api/categories/' . $category2->id, $updateData);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJsonValidationErrors(['name']);
+    }
+
     public function test_delete()
     {
         $category = Category::factory()->create();
 
-        // Disable CSRF protection for tests
-        $response = $this->withoutMiddleware()->delete('/categories/' . $category->id);
+        $response = $this->withoutMiddleware()->delete('/api/categories/' . $category->id);
 
         $response->assertStatus(Response::HTTP_OK);
+
         $response->assertJson([
-            'message' => 'Category successfully deleted',
+            'message' => 'Category deleted successfully.',
         ]);
 
         $this->assertDatabaseMissing('categories', ['id' => $category->id]);
+    }
+
+    public function test_delete_non_existing_category()
+    {
+        $nonExistingId = (Category::max('id') ?? 0) + 1;
+
+        $response = $this->withoutMiddleware()->delete('/api/categories/' . $nonExistingId);
+        $response->assertStatus(Response::HTTP_NOT_FOUND);
+
+        $response->assertJson([
+            'message' => 'Category not found.',
+        ]);
     }
 }
