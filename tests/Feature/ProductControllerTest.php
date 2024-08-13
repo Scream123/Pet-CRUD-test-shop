@@ -5,7 +5,9 @@ namespace Tests\Feature;
 use App\Interfaces\CategoryRepositoryInterface;
 use App\Interfaces\ProductRepositoryInterface;
 use App\Interfaces\TagRepositoryInterface;
+use App\Models\Category;
 use App\Models\Product;
+use App\Models\Tag;
 use App\Schema\ProductCategorySchema;
 use App\Schema\ProductSchema;
 use App\Schema\ProductTagSchema;
@@ -41,7 +43,7 @@ class ProductControllerTest extends TestCase
     }
 
     /** @test */
-    public function test_list_products()
+    public function test_index_products()
     {
         $products = Product::factory()->count(3)->make();
         $this->productRepository->shouldReceive('paginate')->andReturn($products);
@@ -65,43 +67,62 @@ class ProductControllerTest extends TestCase
         ]);
     }
 
-    public function test_create_product()
+    public function test_index_products_failure()
     {
-        /** @var \App\Models\Product $product */
-        $product = Product::factory()->withCategoryAndTags()->create();
+        $this->productRepository->shouldReceive('paginate')
+            ->andThrow(new \Exception('Unable to fetch products.'));
 
+        $response = $this->getJson('/api/products');
 
+        $response->assertStatus(Response::HTTP_INTERNAL_SERVER_ERROR);
+        $response->assertJson([
+            'message' => 'Unable to fetch products.'
+        ]);
+    }
+
+    public function test_store_product()
+    {
+        // Создаем категорию и теги для нового продукта
+        $category = Category::factory()->create();
+        $tags = Tag::factory()->count(3)->create();
+
+        // Отправляем запрос для создания нового продукта
         $response = $this->postJson('/api/products', [
-            ProductSchema::NAME => $product->{ProductSchema::NAME},
-            ProductSchema::SLUG => $product->{ProductSchema::SLUG},
-            ProductSchema::DESCRIPTION => $product->{ProductSchema::DESCRIPTION},
-            'category_id' => $product->categories->first()->id,
-            'tags' => $product->tags->pluck('id')->toArray()
+            ProductSchema::NAME => 'Test Product',
+            ProductSchema::SLUG => 'test-product',
+            ProductSchema::DESCRIPTION => 'This is a test product.',
+            'category_id' => $category->id,
+            'tags' => $tags->pluck('id')->toArray()
         ]);
 
+        // Проверяем успешный ответ
         $response->assertStatus(Response::HTTP_CREATED);
         $response->assertJsonFragment(['message' => 'Product added successfully!']);
 
-        $this->assertDatabaseHas('products', [
-            ProductSchema::NAME => $product->{ProductSchema::NAME},
-            ProductSchema::SLUG => $product->{ProductSchema::SLUG},
-            ProductSchema::DESCRIPTION => $product->{ProductSchema::DESCRIPTION},
-        ]);
-
+        // Проверяем, что продукт добавлен в базу данных
         $productId = $response->json('product.' . ProductSchema::ID);
 
-        $this->assertDatabaseHas(ProductCategorySchema::TABLE, [
-            ProductCategorySchema::PRODUCT_ID => $productId,
-            ProductCategorySchema::CATEGORY_ID => $product->categories->first()->id,
+        $this->assertDatabaseHas('products', [
+            ProductSchema::NAME => 'Test Product',
+            ProductSchema::SLUG => 'test-product',
+            ProductSchema::DESCRIPTION => 'This is a test product.',
         ]);
 
-        foreach ($product->tags->pluck('id') as $tagId) {
+        // Проверяем, что продукт связан с категорией
+        $this->assertDatabaseHas(ProductCategorySchema::TABLE, [
+            ProductCategorySchema::PRODUCT_ID => $productId,
+            ProductCategorySchema::CATEGORY_ID => $category->id,
+        ]);
+
+        // Проверяем, что продукт связан с тегами
+        foreach ($tags->pluck('id') as $tagId) {
             $this->assertDatabaseHas(ProductTagSchema::TABLE, [
                 ProductTagSchema::PRODUCT_ID => $productId,
                 ProductTagSchema::TAG_ID => $tagId,
             ]);
         }
     }
+
 
 
 
