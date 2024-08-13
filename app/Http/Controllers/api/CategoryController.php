@@ -11,6 +11,7 @@ use App\Http\Resources\Category\CategoryCollection;
 use App\Http\Resources\Category\CategoryResource;
 use App\Interfaces\CategoryRepositoryInterface;
 use App\Services\CategoryService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 
 class CategoryController extends Controller
@@ -67,6 +68,8 @@ class CategoryController extends Controller
             $this->categoryService->delete($id);
 
             return response()->json(['message' => 'Category deleted successfully.'], 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'Category not found.'], 404);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Error removing category.'], 500);
         }
