@@ -6,8 +6,9 @@ namespace App\Repositories;
 
 use App\Interfaces\TagRepositoryInterface;
 use App\Models\Tag;
-use \Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class TagRepository implements TagRepositoryInterface
 {
@@ -41,9 +42,15 @@ class TagRepository implements TagRepositoryInterface
 
     public function delete(string $id): void
     {
-        $tag = $this->find($id);
+        $tag = Tag::find($id);
+
+        if (!$tag) {
+            throw new ModelNotFoundException('Tag not found.');
+        }
+
         $tag->delete();
     }
+
     public function paginate(int $perPage = null): LengthAwarePaginator
     {
         $perPage = $perPage ?: config('pagination.per_page');
