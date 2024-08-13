@@ -6,6 +6,7 @@ namespace App\Repositories;
 
 use App\Interfaces\CategoryRepositoryInterface;
 use App\Models\Category;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
@@ -41,6 +42,11 @@ class CategoryRepository implements CategoryRepositoryInterface
     public function delete(string $id): void
     {
         $category = $this->find($id);
+
+        if (!$category) {
+            throw new ModelNotFoundException('Category not found.');
+        }
+
         $category->delete();
     }
     public function paginate(int $perPage = null): LengthAwarePaginator
