@@ -31,8 +31,8 @@ class UpdateRequest extends FormRequest
             ],
             'description' => 'nullable|string',
             'category_id' => 'required|exists:' . CategorySchema::TABLE . ',' . CategorySchema::ID,
-            'tags' => 'required|array',
-            'tags.*' => 'integer|exists:' . TagSchema::TABLE . ',' . TagSchema::ID,
+            'tag_ids' => 'nullable|array',
+            'tag_ids.*' => 'integer|exists:' . TagSchema::TABLE . ',' . TagSchema::ID,
         ];
     }
 
@@ -40,9 +40,8 @@ class UpdateRequest extends FormRequest
     {
         return [
             'name.unique' => 'Product with the name already exists.',
-            'category_id.required' => 'Category ID is required.',
-            'tags.required' => 'Tags are required.',
-            'tags.*.exists' => 'Some tags do not exist in the database.',
+            'category_id.required' => 'category_id is required.',
+            'tag_ids.*.exists' => 'Some tag_ids do not exist in the database.',
         ];
     }
 }
