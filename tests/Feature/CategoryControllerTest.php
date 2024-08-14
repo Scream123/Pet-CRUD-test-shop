@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Category;
 use App\Schema\CategorySchema;
+use App\Services\CategoryService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Carbon;
@@ -141,7 +142,7 @@ class CategoryControllerTest extends TestCase
             CategorySchema::NAME => 'Updated Category Name ' . Str::random(5),
         ];
 
-        $response = $this->put('/api/categories/' . Str::uuid()->toString(), $updateData);
+        $response = $this->put('/api/categories/999', $updateData);
 
         $response->assertStatus(Response::HTTP_NOT_FOUND);
         $response->assertJson([
@@ -205,5 +206,21 @@ class CategoryControllerTest extends TestCase
         $response->assertJson([
             'message' => 'Category not found.',
         ]);
+    }
+
+    public function test_category_product_server_error()
+    {
+        $category = Category::factory()->create();
+
+        // We mock the delete method of the service so that it throws an exception
+        $this->mock(CategoryService::class, function ($mock) {
+            $mock->shouldReceive('delete')
+                ->once()
+                ->andThrow(new \Exception('Server error'));
+        });
+
+        $response = $this->deleteJson("/api/categories/{$category->id}");
+        $response->assertStatus(500);
+        $response->assertJson(['message' => 'Error removing category.']);
     }
 }
