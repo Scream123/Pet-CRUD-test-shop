@@ -34,8 +34,14 @@ class CategoryRepository implements CategoryRepositoryInterface
 
     public function update(string $id, array $data): Category
     {
-        $category = $this->find($id);
+        $category = Category::find($id);
+
+        if (!$category) {
+            throw new ModelNotFoundException('Category not found');
+        }
+
         $category->update($data);
+
         return $category;
     }
 
