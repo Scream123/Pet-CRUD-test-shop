@@ -23,7 +23,6 @@ class Product extends Model
         ProductSchema::NAME,
         ProductSchema::DESCRIPTION,
         ProductSchema::SLUG,
-
     ];
 
     public function categories(): BelongsToMany
@@ -34,7 +33,6 @@ class Product extends Model
             ProductCategorySchema::PRODUCT_ID,
             ProductCategorySchema::CATEGORY_ID
         );
-
     }
 
     public function tags(): BelongsToMany
