@@ -13,6 +13,7 @@ use App\Interfaces\TagRepositoryInterface;
 use App\Services\TagService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class TagController extends Controller
 {
@@ -23,7 +24,6 @@ class TagController extends Controller
     {
         $this->tagService = $tagService;
         $this->tagRepository = $tagRepository;
-
     }
 
     public function index(): TagCollection
@@ -54,10 +54,13 @@ class TagController extends Controller
 
     public function update(UpdateRequest $request, string $id): JsonResponse
     {
-        $data = $request->validated();
-        $tag = $this->tagService->update($id, $data);
+        try {
+            $tag = $this->tagService->update($id, $request->validated());
 
-        return response()->json(['message' => 'Tag successfully updated', 'tag' => $tag], 200);
+            return response()->json($tag, Response::HTTP_OK);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'Tag not found.'], Response::HTTP_NOT_FOUND);
+        }
     }
 
     public function destroy(string $id): JsonResponse

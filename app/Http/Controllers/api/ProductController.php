@@ -13,6 +13,7 @@ use App\Interfaces\CategoryRepositoryInterface;
 use App\Interfaces\ProductRepositoryInterface;
 use App\Interfaces\TagRepositoryInterface;
 use App\Services\ProductService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 
@@ -36,16 +37,20 @@ class ProductController extends Controller
         $this->tagRepository = $tagRepository;
     }
 
-    public function index(): ProductCollection
+    public function index(): ProductCollection|JsonResponse
     {
-        $products = $this->productRepository->paginate();
-
-        return new ProductCollection($products);
+        try {
+            $products = $this->productRepository->paginate();
+            return new ProductCollection($products);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Unable to fetch products'], 500);
+        }
     }
 
     public function store(StoreRequest $request): JsonResponse
     {
         $data = $request->validated();
+
         try {
             $product = $this->productService->create($data);
             return response()->json([
@@ -60,7 +65,7 @@ class ProductController extends Controller
 
     public function show(string $id): JsonResponse|ProductResource
     {
-        $product = $this->productRepository->find($id);
+        $product = $this->productService->find($id);
 
         if (!$product) {
             return response()->json(['message' => 'Product not found.'], 404);
@@ -79,10 +84,11 @@ class ProductController extends Controller
             return response()->json([
                 'message' => 'Product updated successfully!',
                 'product' => $product
-            ], 201);
+            ]);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'Product not found.'], 404);
         } catch (\Exception $e) {
-            Log::error('Error update product: ' . $e->getMessage());
-            return response()->json(['error' => 'Error update product'], 500);
+            return response()->json(['error' => 'Error updating product'], 500);
         }
     }
 
@@ -91,7 +97,9 @@ class ProductController extends Controller
         try {
             $this->productService->delete($id);
 
-            return response()->json(['message' => 'Product deleted successfully.'], 200);
+            return response()->json(['message' => 'Product deleted successfully.']);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'Product not found.'], 404);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Error removing product.'], 500);
         }
