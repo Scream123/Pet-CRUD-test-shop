@@ -13,6 +13,7 @@ use App\Interfaces\CategoryRepositoryInterface;
 use App\Services\CategoryService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class CategoryController extends Controller
 {
@@ -56,10 +57,13 @@ class CategoryController extends Controller
 
     public function update(UpdateRequest $request, string $id): JsonResponse
     {
-        $data = $request->validated();
-        $category = $this->categoryService->update($id, $data);
+        try {
+            $category = $this->categoryService->update($id, $request->validated());
 
-        return response()->json(['message' => 'Category successfully updated', 'category' => $category], 200);
+            return response()->json($category, Response::HTTP_OK);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'Category not found.'], Response::HTTP_NOT_FOUND);
+        }
     }
 
     public function destroy(string $id): JsonResponse
