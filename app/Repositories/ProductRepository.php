@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Schema\CategorySchema;
 use App\Schema\ProductSchema;
 use App\Schema\TagSchema;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
@@ -31,25 +32,15 @@ class ProductRepository implements ProductRepositoryInterface
 
     public function create(array $data): Product
     {
-        $product = $this->model->create([
+        return $this->model->create([
             ProductSchema::NAME => $data['name'],
             ProductSchema::DESCRIPTION => $data['description'],
         ]);
-
-        if (isset($data['category_ids']) && is_array($data['category_ids'])) {
-            $product->categories()->sync($data['category_ids']);
-        }
-
-        if (isset($data['tag_ids']) && is_array($data['tag_ids'])) {
-            $product->tags()->sync($data['tag_ids']);
-        }
-
-        return $product;
     }
 
     public function find(string $id): ?Product
     {
-        return $this->model->findOrFail($id);
+        return $this->model->find($id);
     }
 
     public function all(): Collection
@@ -59,16 +50,24 @@ class ProductRepository implements ProductRepositoryInterface
 
     public function update(string $id, array $data): Product
     {
-
         $product = $this->find($id);
-        $product->update($data);
 
+        if (!$product) {
+            throw new ModelNotFoundException('Product not found');
+        }
+
+        $product->update($data);
         return $product;
     }
 
     public function delete(string $id): void
     {
         $product = $this->find($id);
+
+        if (!$product) {
+            throw new ModelNotFoundException('Product not found.');
+        }
+
         $product->delete();
     }
 
