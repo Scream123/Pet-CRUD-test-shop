@@ -33,9 +33,14 @@ class TagRepository implements TagRepositoryInterface
         return $this->model->create($data);
     }
 
-    public function update($id, array $data): Tag
+    public function update(string $id, array $data): Tag
     {
         $tag = $this->find($id);
+
+        if (!$tag) {
+            throw new ModelNotFoundException('Tag not found');
+        }
+
         $tag->update($data);
         return $tag;
     }
