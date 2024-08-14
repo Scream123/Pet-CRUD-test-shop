@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
         $this->call(ClearDatabaseSeeder::class);
 
@@ -22,7 +22,6 @@ class DatabaseSeeder extends Seeder
 
         foreach ($products as $product) {
             $category = $categories->random();
-
             $productTags = $tags->random(rand(1, 3));
 
             DB::table(ProductCategorySchema::TABLE)->insert([
