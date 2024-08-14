@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Interfaces\ProductRepositoryInterface;
 use App\Models\Product;
 use App\Schema\ProductSchema;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 
 class ProductService
@@ -17,17 +18,21 @@ class ProductService
     {
         $this->productRepository = $productRepository;
     }
+    public function find(string $id): ?Product
+    {
+        return $this->productRepository->find($id);
+    }
 
     public function create(array $data): Product
     {
         $product = $this->productRepository->create($data);
 
-        if ($data['category_id']) {
+        if (isset($data['category_id'])) {
             $product->categories()->attach($data['category_id']);
         }
 
-        if (!empty($data['tags'])) {
-            $product->tags()->sync($data['tags']);
+        if (isset($data['tag_ids']) && is_array($data['tag_ids'])) {
+            $product->tags()->sync($data['tag_ids']);
         }
 
         return $product;
@@ -40,7 +45,7 @@ class ProductService
         try {
             $product = $this->productRepository->find($id);
             if (!$product) {
-                throw new \Exception('Product not found.');
+                throw new ModelNotFoundException('Product not found.');
             }
 
             $product->update([
@@ -51,11 +56,11 @@ class ProductService
             $product->categories()->detach();
             $product->tags()->detach();
 
-            if ($data['category_id']) {
+            if (isset($data['category_id'])) {
                 $product->categories()->attach($data['category_id']);
             }
-            if (!empty($data['tags'])) {
-                $product->tags()->sync($data['tags']);
+            if (isset($data['tag_ids']) && is_array($data['tag_ids'])) {
+                $product->tags()->sync($data['tag_ids']);
             }
             DB::commit();
             return $product;
