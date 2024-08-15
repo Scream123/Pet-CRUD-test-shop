@@ -9,7 +9,7 @@
                 <h2 class="mb-0">Editing: {{ $tag->name }}</h2>
             </div>
             <div class="card-body">
-                <form action="{{ route('tags.update', $tag->id) }}" method="POST">
+                <form action="{{ route('api.tags.update', $tag->id) }}" method="POST">
                     @csrf
                     @method('PUT')
 

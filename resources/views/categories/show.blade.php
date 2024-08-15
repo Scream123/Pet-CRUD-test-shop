@@ -14,8 +14,8 @@
                 <p><strong>Updated At:</strong> {{ $category->updated_at }}</p>
             </div>
             <div class="card-footer">
-                <a href="{{ route('categories.edit', $category->id) }}" class="btn btn-primary">Edit</a>
-                <form action="{{ route('categories.destroy', $category->id) }}" method="POST" style="display:inline;">
+                <a href="{{ route('web.categories.edit', $category->id) }}" class="btn btn-primary">Edit</a>
+                <form action="{{ route('api.categories.destroy', $category->id) }}" method="POST" style="display:inline;">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="btn btn-danger"

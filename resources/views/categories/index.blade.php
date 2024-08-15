@@ -32,9 +32,9 @@
                     <td>{{ $category->name }}</td>
                     <td>{{ $category->slug }}</td>
                     <td>
-                        <a href="{{ route('categories.show', $category->id) }}" class="btn btn-info btn-sm">Show</a>
-                        <a href="{{ route('categories.edit', $category->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                        <form action="{{ route('categories.destroy', $category->id) }}" method="POST" style="display:inline;">
+                        <a href="{{ route('web.categories.show', $category->id) }}" class="btn btn-info btn-sm">Show</a>
+                        <a href="{{ route('web.categories.edit', $category->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                        <form action="{{ route('api.categories.destroy', $category->id) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this category?')">Delete</button>

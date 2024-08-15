@@ -10,7 +10,7 @@
             </div>
         @endif
 
-        <form action="{{ route('tags.store') }}" method="POST">
+        <form action="{{ route('api.tags.store') }}" method="POST">
             @csrf
             <div class="mb-3">
                 <label for="name" class="form-label">Tag Name</label>

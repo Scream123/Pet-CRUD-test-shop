@@ -9,7 +9,7 @@
                 <h2>Editing: {{ $category->name }}</h2>
             </div>
             <div class="card-body">
-                <form action="{{ route('categories.update', $category->id) }}" method="POST">
+                <form action="{{ route('api.categories.update', $category->id) }}" method="POST">
                     @csrf
                     @method('PUT')
 

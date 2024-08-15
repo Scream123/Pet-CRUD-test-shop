@@ -32,7 +32,7 @@
             </div>
             <div class="card-footer">
                 <a href="{{ route('web.products.edit', $product->id) }}" class="btn btn-primary">Edit</a>
-                <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display:inline;">
+                <form action="{{ route('api.products.destroy', $product->id) }}" method="POST" style="display:inline;">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="btn btn-danger"
