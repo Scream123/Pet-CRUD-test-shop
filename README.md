@@ -1,4 +1,4 @@
-# CRUD application
+# CRUD Application
 
 A brief description of the project and its purpose.
 
@@ -42,13 +42,43 @@ Instructions for setting up and configuring the project.
     php artisan serve
     ```
 
+## Docker Setup
+
+If you are using Docker to manage the environment, follow these steps:
+
+1. Build and start the containers:
+    ```bash
+    docker-compose up -d
+    ```
+
+2. If you need to rebuild the Docker images:
+    ```bash
+    docker-compose build
+    ```
+
+3. Run database migrations within the Docker container:
+    ```bash
+    docker-compose exec app php artisan migrate
+    ```
+
+4. Access the application via `http://localhost:8876`.
+
 ## Usage
 
 Instructions on how to use the project, including command examples and features.
 
 ## Configuration
 
-Details on configuring files and settings if needed.
+### Database
+
+Make sure to set up your database configurations in the `.env` file:
+
+- `DB_CONNECTION`: mysql
+- `DB_HOST`: your database host (default is `127.0.0.1` or `db` if using Docker)
+- `DB_PORT`: the port for the database (default is `3306`)
+- `DB_DATABASE`: the name of your database
+- `DB_USERNAME`: your database username
+- `DB_PASSWORD`: your database password
 
 ## Testing
 
