@@ -1,30 +1,29 @@
-# Node.js dependencies
-/node_modules
-
-# Build output
-/dist
-/build
-
-# Environment files
+# Laravel specific
+/vendor/
+storage/
+tmp/
+/node_modules/
+/public/storage
+/storage/*.key
+/storage/app/*.key
 .env
-.env.local
-.env.*.local
+.phpunit.result.cache
+Homestead.yaml
+Homestead.json
 
-# Logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# IDEs and editors
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
 
-# OS-specific files
+# OS specific
 .DS_Store
 Thumbs.db
 
-# IDE/editor folders
-.idea/
-.vscode/
-
-# Other files
+# Logs
 *.log
 *.tmp
+
+# Others
 *.swp
-*.swo
