@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Product\DestroyRequest;
+use App\Http\Requests\Product\IndexRequest;
+use App\Http\Requests\Product\ShowRequest;
 use App\Http\Requests\Product\StoreRequest;
 use App\Http\Requests\Product\UpdateRequest;
 use App\Http\Resources\Product\ProductCollection;
@@ -37,7 +40,7 @@ class ProductController extends Controller
         $this->tagRepository = $tagRepository;
     }
 
-    public function index(): ProductCollection|JsonResponse
+    public function index(IndexRequest $request): ProductCollection|JsonResponse
     {
         try {
             $products = $this->productRepository->paginate();
@@ -63,9 +66,10 @@ class ProductController extends Controller
         }
     }
 
-    public function show(string $id): JsonResponse|ProductResource
+    public function show(ShowRequest $request): JsonResponse|ProductResource
     {
-        $product = $this->productService->find($id);
+        $validated = $request->validated();
+        $product = $this->productService->find($validated['id']);
 
         if (!$product) {
             return response()->json(['message' => 'Product not found.'], 404);
@@ -92,10 +96,11 @@ class ProductController extends Controller
         }
     }
 
-    public function destroy(string $id): JsonResponse
+    public function destroy(DestroyRequest $request): JsonResponse
     {
         try {
-            $this->productService->delete($id);
+            $validated = $request->validated();
+            $this->productService->delete($validated['id']);
 
             return response()->json(['message' => 'Product deleted successfully.']);
         } catch (ModelNotFoundException $e) {

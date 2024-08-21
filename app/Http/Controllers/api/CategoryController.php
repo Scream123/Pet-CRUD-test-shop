@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Category\DestroyRequest;
+use App\Http\Requests\Category\IndexRequest;
+use App\Http\Requests\Category\ShowRequest;
 use App\Http\Requests\Category\StoreRequest;
 use App\Http\Requests\Category\UpdateRequest;
 use App\Http\Resources\Category\CategoryCollection;
@@ -29,7 +32,7 @@ class CategoryController extends Controller
     }
 
 
-    public function index(): CategoryCollection
+    public function index(IndexRequest $request): CategoryCollection
     {
         $categories = $this->categoryRepository->paginate();
 
@@ -44,13 +47,10 @@ class CategoryController extends Controller
         return response()->json(['message' => 'Category successfully created', 'category' => $category], 201);
     }
 
-    public function show(string $id): JsonResponse|CategoryResource
+    public function show(ShowRequest $request): JsonResponse|CategoryResource
     {
-        $category = $this->categoryService->find($id);
-
-        if (!$category) {
-            return response()->json(['message' => 'Category not found.'], 404);
-        }
+        $validated = $request->validated();
+        $category = $this->categoryService->find($validated['id']);
 
         return new CategoryResource($category);
     }
@@ -66,10 +66,11 @@ class CategoryController extends Controller
         }
     }
 
-    public function destroy(string $id): JsonResponse
+    public function destroy(DestroyRequest $request): JsonResponse
     {
         try {
-            $this->categoryService->delete($id);
+            $validated = $request->validated();
+            $this->categoryService->delete($validated['id']);
 
             return response()->json(['message' => 'Category deleted successfully.'], 200);
         } catch (ModelNotFoundException $e) {

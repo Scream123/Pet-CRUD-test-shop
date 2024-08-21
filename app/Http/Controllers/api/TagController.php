@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Tag\DestroyRequest;
+use App\Http\Requests\Tag\IndexRequest;
+use App\Http\Requests\Tag\ShowRequest;
 use App\Http\Requests\Tag\StoreRequest;
 use App\Http\Requests\Tag\UpdateRequest;
 use App\Http\Resources\Tag\TagCollection;
@@ -26,7 +29,7 @@ class TagController extends Controller
         $this->tagRepository = $tagRepository;
     }
 
-    public function index(): TagCollection
+    public function index(IndexRequest $request): TagCollection
     {
         $tags = $this->tagRepository->paginate();
 
@@ -41,9 +44,10 @@ class TagController extends Controller
         return response()->json(['message' => 'Tag successfully created', 'tag' => $tag], 201);
     }
 
-    public function show(string $id): TagResource|JsonResponse
+    public function show(ShowRequest $request): TagResource|JsonResponse
     {
-        $tag = $this->tagRepository->find($id);
+        $validated = $request->validated();
+        $tag = $this->tagRepository->find($validated['id']);
 
         if (!$tag) {
             return response()->json(['message' => 'Tag not found.'], 404);
@@ -63,10 +67,11 @@ class TagController extends Controller
         }
     }
 
-    public function destroy(string $id): JsonResponse
+    public function destroy(DestroyRequest $request): JsonResponse
     {
         try {
-            $this->tagService->delete($id);
+            $validated = $request->validated();
+            $this->tagService->delete($validated['id']);
 
             return response()->json(['message' => 'Tag deleted successfully.'], 200);
         } catch (ModelNotFoundException $e) {
